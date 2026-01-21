@@ -1,30 +1,46 @@
-const CACHE_NAME = 'gig-advance-v1';
-const ASSETS = [
-    '/',
-    '/index.html',
-    '/manifest.json',
-    '/icon-192.png',
-    '/icon-512.png'
+// Service Worker for Expense Tracker PWA
+const CACHE_NAME = 'expense-tracker-v10';
+const urlsToCache = [
+    './',
+    './index.html',
+    './manifest.json',
+    './icon-192.png',
+    './icon-512.png'
 ];
 
-self.addEventListener('install', event => {
+// Install event - cache files
+self.addEventListener('install', function(event) {
     event.waitUntil(
-        caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+        caches.open(CACHE_NAME)
+            .then(function(cache) {
+                return cache.addAll(urlsToCache);
+            })
     );
-    self.skipWaiting();
 });
 
-self.addEventListener('activate', event => {
-    event.waitUntil(
-        caches.keys().then(keys => 
-            Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+// Fetch event - serve from cache, fallback to network
+self.addEventListener('fetch', function(event) {
+    event.respondWith(
+        caches.match(event.request)
+            .then(function(response) {
+                // Return cached version or fetch from network
+                return response || fetch(event.request);
+            }
         )
     );
-    self.clients.claim();
 });
 
-self.addEventListener('fetch', event => {
-    event.respondWith(
-        caches.match(event.request).then(cached => cached || fetch(event.request))
+// Activate event - clean up old caches
+self.addEventListener('activate', function(event) {
+    event.waitUntil(
+        caches.keys().then(function(cacheNames) {
+            return Promise.all(
+                cacheNames.map(function(cacheName) {
+                    if (cacheName !== CACHE_NAME) {
+                        return caches.delete(cacheName);
+                    }
+                })
+            );
+        })
     );
 });

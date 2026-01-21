@@ -2,1157 +2,2778 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Expense Tracker</title>
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1a1a2e">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>Gig Advance</title>
-    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Expenses">
     <link rel="apple-touch-icon" href="icon-192.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        :root {
-            --bg-primary: #f8f9fa;
-            --bg-secondary: #ffffff;
-            --bg-tertiary: #e9ecef;
-            --text-primary: #212529;
-            --text-secondary: #6c757d;
-            --text-muted: #adb5bd;
-            --accent: #2563eb;
-            --accent-hover: #1d4ed8;
-            --accent-light: #dbeafe;
-            --border: #dee2e6;
-            --success: #22c55e;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --card-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
-            --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.1);
-            --radius: 12px;
-            --radius-sm: 8px;
-        }
-
-        [data-theme="dark"] {
-            --bg-primary: #0f0f14;
-            --bg-secondary: #1a1a22;
-            --bg-tertiary: #252530;
-            --text-primary: #f1f1f1;
-            --text-secondary: #a0a0a8;
-            --text-muted: #6b6b75;
-            --accent: #3b82f6;
-            --accent-hover: #60a5fa;
-            --accent-light: #1e3a5f;
-            --border: #2d2d3a;
-            --card-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.4);
-        }
-
+        /* ============================================
+           BASE STYLES: Overall page setup
+           ============================================ */
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
-            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #2d3436;
+            line-height: 1.6;
             min-height: 100vh;
-            line-height: 1.5;
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        /* Header */
-        .header {
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border);
-            padding: 16px 20px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header h1 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .theme-toggle {
-            background: var(--bg-tertiary);
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            transition: all 0.2s ease;
-        }
-
-        .theme-toggle:hover {
-            background: var(--border);
-        }
-
-        /* Main Container */
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
             padding: 20px;
         }
 
-        /* Add Button */
-        .add-btn {
-            background: var(--accent);
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 14px 20px;
-            border-radius: var(--radius);
-            font-size: 1rem;
+        /* ============================================
+           LAYOUT: Container and sections
+           ============================================ */
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        h1 {
             font-weight: 600;
-            cursor: pointer;
+            font-size: 1.8rem;
+            color: #1a1a2e;
+            letter-spacing: -0.5px;
+        }
+        
+        section {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            box-sizing: border-box;
+            overflow: hidden;
+            border: 1px solid #1a1a2e;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        h2 {
+            font-weight: 500;
+            font-size: 1rem;
+            color: #636e72;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ============================================
+           BUDGET DISPLAY
+           ============================================ */
+        
+        #budget-display, #spent-display, #remaining-display {
+            font-weight: 600;
+        }
+        
+        section p {
+            margin: 8px 0;
+            font-size: 1rem;
+            color: #4a4a4a;
+        }
+
+        /* ============================================
+           FORM ELEMENTS
+           ============================================ */
+        
+        label {
+            display: block;
+            font-size: 0.85rem;
+            color: #636e72;
+            margin-bottom: 6px;
+            margin-top: 16px;
+        }
+        
+        label:first-of-type {
+            margin-top: 0;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #fafafa;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4a6fa5;
+            background: #ffffff;
+        }
+        
+        input::placeholder {
+            color: #b0b0b0;
+        }
+
+        /* Budget input row */
+        section > div:first-of-type {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-            margin-bottom: 16px;
-        }
-
-        .add-btn:hover {
-            background: var(--accent-hover);
-            transform: translateY(-1px);
-        }
-
-        /* Tabs */
-        .tabs {
-            display: flex;
-            gap: 4px;
-            background: var(--bg-tertiary);
-            padding: 4px;
-            border-radius: var(--radius);
+            gap: 10px;
             margin-bottom: 20px;
         }
-
-        .tab {
+        
+        section > div:first-of-type label {
+            margin: 0;
+            white-space: nowrap;
+        }
+        
+        section > div:first-of-type input {
             flex: 1;
-            padding: 10px 16px;
+        }
+
+        /* ============================================
+           BUTTONS
+           ============================================ */
+        
+        button {
+            background: #1a1a2e;
+            color: #ffffff;
             border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
             cursor: pointer;
-            border-radius: var(--radius-sm);
-            transition: all 0.2s ease;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        
+        button:hover {
+            background: #2d3436;
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        #add-expense-btn {
+            width: 100%;
+            margin-top: 24px;
+        }
+        
+        #add-income-btn {
+            width: 100%;
+            margin-top: 24px;
+        }
+        
+        #set-budget-btn {
+            padding: 12px 20px;
         }
 
-        .tab:hover {
-            color: var(--text-primary);
-        }
-
-        .tab.active {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            box-shadow: var(--card-shadow);
-        }
-
-        /* Gig Cards */
-        .gig-list {
+        /* ============================================
+           EXPENSE LIST
+           ============================================ */
+        
+        #expense-list {
+            margin-top: 8px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-        }
-
-        .gig-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 16px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: var(--card-shadow);
-        }
-
-        .gig-card:hover {
-            box-shadow: var(--card-shadow-hover);
-            border-color: var(--accent);
-        }
-
-        .gig-card-header {
-            display: flex;
-            justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 8px;
+            text-align: left;
+        }
+        
+        #expense-list > .expense-item {
+            width: calc(100% + 24px);
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        #expense-list > .expense-item:last-child {
+            border-bottom: none;
+        }
+        
+        #expense-list p {
+            color: #9a9a9a;
+            font-size: 0.95rem;
+        }
+        
+        #income-list {
+            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+        }
+        
+        #income-list > .expense-item {
+            width: calc(100% + 24px);
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        #income-list > .expense-item:last-child {
+            border-bottom: none;
+        }
+        
+        #income-list p {
+            color: #9a9a9a;
+            font-size: 0.95rem;
+        }
+        
+        #subscription-list {
+            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+        }
+        
+        #subscription-list > .expense-item {
+            width: calc(100% + 24px);
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        #subscription-list > .expense-item:last-child {
+            border-bottom: none;
+        }
+        
+        #subscription-list p {
+            color: #9a9a9a;
+            font-size: 0.95rem;
+        }
+        
+        #income-breakdown {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
-        .gig-venue {
-            font-weight: 600;
-            font-size: 1.1rem;
+        /* ============================================
+           NAVIGATION BAR
+           ============================================ */
+        
+        nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 16px 0;
+            border-top: 1px solid #f0f0f0;
         }
-
-        .gig-status {
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 4px 10px;
-            border-radius: 20px;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-        }
-
-        .status-pending {
-            background: var(--warning);
-            color: #000;
-        }
-
-        .status-confirmed {
-            background: var(--success);
-            color: #fff;
-        }
-
-        .status-complete {
-            background: var(--accent);
-            color: #fff;
-        }
-
-        .gig-meta {
-            color: var(--text-secondary);
+        
+        nav button {
+            background: none;
+            color: #b0b0b0;
+            padding: 8px 16px;
             font-size: 0.9rem;
         }
+        
+        nav button:hover {
+            background: none;
+            color: #1a1a2e;
+        }
+        
+        nav button.active {
+            color: #1a1a2e;
+        }
+        
+        /* Add padding at bottom so content doesn't hide behind nav */
+        body {
+            padding-bottom: 80px;
+        }
 
-        .gig-progress {
-            margin-top: 12px;
+        /* ============================================
+           PAGE CONTAINERS
+           ============================================ */
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+
+        /* ============================================
+           CALENDAR STYLES
+           ============================================ */
+        
+        .calendar-header {
             display: flex;
-            gap: 8px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
-
-        .progress-item {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            background: var(--bg-tertiary);
-            padding: 4px 8px;
-            border-radius: var(--radius-sm);
-        }
-
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-secondary);
-        }
-
-        .empty-state svg {
-            width: 64px;
-            height: 64px;
-            margin-bottom: 16px;
-            opacity: 0.4;
-        }
-
-        .empty-state h3 {
+        
+        .calendar-header h3 {
+            font-weight: 500;
             font-size: 1.1rem;
-            margin-bottom: 8px;
-            color: var(--text-primary);
+            color: #1a1a2e;
+        }
+        
+        .calendar-header button {
+            background: none;
+            color: #636e72;
+            padding: 8px 12px;
+            font-size: 1.2rem;
+        }
+        
+        .calendar-header button:hover {
+            color: #1a1a2e;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+        
+        .calendar-grid .day-label {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #9a9a9a;
+            padding: 8px 0;
+            font-weight: 500;
+        }
+        
+        .calendar-grid .day {
+            height: 58px;
+            min-height: 58px;
+            max-height: 58px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #4a4a4a;
+            overflow: hidden;
+            padding: 6px 4px;
+            box-sizing: border-box;
+        }
+        
+        .calendar-grid .day.other-month {
+            color: #d0d0d0;
+        }
+        
+        .calendar-grid .day.has-expense {
+            background: #f0f4f8;
+        }
+        
+        .calendar-grid .day .amount {
+            font-size: 0.6rem;
+            color: #e74c3c;
+            font-weight: 600;
+            margin-top: 1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            line-height: 1.1;
+        }
+        
+        .calendar-grid .day .amount.income-amount {
+            color: #27ae60;
+        }
+        
+        .calendar-grid .day.has-expense {
+            cursor: pointer;
+        }
+        
+        .calendar-grid .day.has-expense:hover {
+            background: #e3e9f0;
         }
 
-        /* Modal */
+        /* ============================================
+           MODAL STYLES
+           ============================================ */
+        
         .modal-overlay {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            align-items: flex-start;
+            background: rgba(0, 0, 0, 0.4);
             justify-content: center;
-            z-index: 200;
-            padding: 20px;
-            overflow-y: auto;
+            align-items: center;
+            z-index: 100;
         }
-
+        
         .modal-overlay.active {
             display: flex;
         }
-
+        
         .modal {
-            background: var(--bg-secondary);
-            border-radius: var(--radius);
-            width: 100%;
-            max-width: 560px;
-            margin: 20px 0;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .modal-header h2 {
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: var(--radius-sm);
-            transition: all 0.2s ease;
-        }
-
-        .modal-close:hover {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-        }
-
-        .modal-body {
-            padding: 20px;
-            max-height: 70vh;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 340px;
+            max-height: 80vh;
             overflow-y: auto;
         }
-
-        .modal-footer {
-            padding: 16px 20px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-        }
-
-        /* Form Elements */
-        .form-group {
+        
+        .modal-header {
+            position: relative;
+            text-align: center;
             margin-bottom: 16px;
         }
-
-        .form-label {
-            display: block;
-            font-size: 0.85rem;
+        
+        .modal-header h3 {
             font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
+            font-size: 1.1rem;
+            color: #1a1a2e;
+        }
+        
+        .modal-close {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            color: #9a9a9a;
+            font-size: 1.5rem;
+            padding: 0;
+            line-height: 1;
+        }
+        
+        .modal-close:hover {
+            color: #1a1a2e;
+            background: none;
+        }
+        
+        .modal-expense {
+            padding: 12px;
+            margin: 0 -12px;
+            border-bottom: 1px solid #f0f0f0;
+            border-radius: 8px;
+        }
+        
+        .modal-expense:last-child {
+            border-bottom: none;
+        }
+        
+        .modal-expense.expense-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .modal-total {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 2px solid #f0f0f0;
+            font-weight: 600;
+            text-align: right;
         }
 
-        .form-input, .form-select, .form-textarea {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-size: 1rem;
-            font-family: inherit;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            transition: all 0.2s ease;
-        }
-
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-light);
-        }
-
-        .form-textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .form-row {
+        /* ============================================
+           TRENDS PAGE STYLES
+           ============================================ */
+        
+        .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
+            width: 100%;
+            box-sizing: border-box;
         }
-
-        .date-input-wrapper {
-            position: relative;
-        }
-
-        .date-input-wrapper input {
-            cursor: pointer;
-        }
-
-        .date-icon {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            pointer-events: none;
-        }
-
-        /* Section Accordions */
-        .section {
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            margin-bottom: 12px;
-            overflow: hidden;
-        }
-
-        .section-header {
-            background: var(--bg-tertiary);
-            padding: 14px 16px;
+        
+        .stat-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px 8px;
+            text-align: center;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
+            flex-direction: column;
+            justify-content: center;
+            height: 85px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            box-sizing: border-box;
+            min-width: 0;
+        }
+        
+        .stat-value {
+            font-size: 1.2rem;
             font-weight: 600;
-            user-select: none;
-            transition: background 0.2s ease;
+            color: #1a1a2e;
         }
-
-        .section-header:hover {
-            background: var(--border);
+        
+        .stat-label {
+            font-size: 0.65rem;
+            color: #9a9a9a;
+            margin-top: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-
-        .section-header svg {
-            transition: transform 0.2s ease;
-        }
-
-        .section.open .section-header svg {
-            transform: rotate(180deg);
-        }
-
-        .section-content {
-            display: none;
-            padding: 16px;
-            border-top: 1px solid var(--border);
-        }
-
-        .section.open .section-content {
+        
+        .category-item {
             display: block;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            text-align: left;
+            width: 100%;
         }
-
-        /* Checklist Items */
-        .checklist-item {
-            margin-bottom: 16px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .checklist-item:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
+        
+        .category-item:last-child {
             border-bottom: none;
         }
-
-        .checklist-question {
-            font-weight: 500;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
-        }
-
-        .toggle-group {
+        
+        #category-breakdown {
             display: flex;
-            gap: 6px;
-            margin-bottom: 10px;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
         }
-
-        .toggle-btn {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid var(--border);
-            background: var(--bg-primary);
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            font-weight: 500;
+        
+        .no-data-message {
+            text-align: center;
+            color: #9a9a9a;
+            padding: 40px 0;
+        }
+        
+        .month-history-item {
+            padding: 10px 0;
+            text-align: center;
+            color: #d0d0d0;
+            font-size: 0.9rem;
+        }
+        
+        .month-history-item.has-data {
+            color: #1a1a2e;
             cursor: pointer;
-            border-radius: var(--radius-sm);
-            transition: all 0.2s ease;
+            transition: color 0.2s;
         }
-
-        .toggle-btn:first-child {
-            border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+        
+        .month-history-item.has-data:hover {
+            color: #4a6fa5;
         }
-
-        .toggle-btn:last-child {
-            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        
+        #monthly-history {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
         }
-
-        .toggle-btn:not(:first-child):not(:last-child) {
-            border-radius: 0;
+        
+        .year-selector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
         }
-
-        .toggle-btn.active {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: white;
+        
+        .year-selector button {
+            background: none;
+            color: #636e72;
+            padding: 8px 12px;
+            font-size: 1.2rem;
         }
-
-        .toggle-btn.active-yes {
-            background: var(--success);
-            border-color: var(--success);
+        
+        .year-selector button:hover {
+            color: #1a1a2e;
+            background: none;
         }
-
-        .toggle-btn.active-no {
-            background: var(--danger);
-            border-color: var(--danger);
+        
+        .year-selector span {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a1a2e;
         }
-
-        .checklist-notes {
+        
+        /* Month detail modal */
+        .modal-stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .modal-stat-row:last-child {
+            border-bottom: none;
+        }
+        
+        .modal-stat-label {
+            color: #636e72;
+        }
+        
+        .modal-stat-value {
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+        
+        /* Edit modal form */
+        .modal-form label {
+            display: block;
+            font-size: 0.85rem;
+            color: #636e72;
+            margin-bottom: 6px;
+            margin-top: 16px;
+        }
+        
+        .modal-form label:first-of-type {
+            margin-top: 0;
+        }
+        
+        .modal-form input,
+        .modal-form select {
             width: 100%;
             padding: 10px 12px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-size: 0.9rem;
-            font-family: inherit;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            resize: vertical;
-            min-height: 60px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #fafafa;
         }
-
-        .checklist-notes::placeholder {
-            color: var(--text-muted);
-        }
-
-        .checklist-notes:focus {
+        
+        .modal-form input:focus,
+        .modal-form select:focus {
             outline: none;
-            border-color: var(--accent);
+            border-color: #4a6fa5;
+            background: #ffffff;
         }
-
-        /* Buttons */
-        .btn {
-            padding: 12px 20px;
-            border-radius: var(--radius-sm);
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: none;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-hover);
-        }
-
-        .btn-secondary {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--border);
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #dc2626;
-        }
-
-        /* Delete confirmation */
-        .delete-section {
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
             margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border);
         }
-
-        .delete-btn {
-            width: 100%;
-            background: transparent;
-            border: 1px solid var(--danger);
-            color: var(--danger);
+        
+        .modal-buttons button {
+            flex: 1;
             padding: 12px;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
+        }
+        
+        .btn-delete {
+            background: #e74c3c;
+        }
+        
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+        
+        .btn-save {
+            background: #1a1a2e;
+        }
+        
+        /* Clickable expense items */
+        .expense-item {
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: background-color 0.2s;
+            margin: 0 -12px;
+            padding: 12px;
+            border-radius: 8px;
         }
-
-        .delete-btn:hover {
-            background: var(--danger);
-            color: white;
-        }
-
-        /* Responsive */
-        @media (max-width: 480px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
+        
+        .expense-item:hover {
+            background: #f8f9fa;
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <h1>Gig Advance</h1>
-        <div class="header-actions">
-            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="5"/>
-                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                </svg>
-            </button>
-        </div>
+
+    <!-- App Header -->
+    <header>
+        <h1>Expense Tracker</h1>
     </header>
 
-    <main class="container">
-        <button class="add-btn" onclick="openModal()">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                <path d="M12 5v14M5 12h14"/>
-            </svg>
-            New Gig
-        </button>
+    <!-- ============================================
+         HOME PAGE
+         ============================================ -->
+    <div id="home-page" class="page active">
+        
+        <!-- Budget Section -->
+        <section>
+            <h2>Monthly Budget</h2>
+            <div>
+                <label>Set Budget: $</label>
+                <input type="number" id="budget-input" placeholder="0.00">
+                <button id="set-budget-btn">Set</button>
+            </div>
+            <p>Budget: $<span id="budget-display">0</span></p>
+            <p>Spent: $<span id="spent-display">0</span></p>
+            <p>Remaining: $<span id="remaining-display">0</span></p>
+        </section>
 
-        <div class="tabs">
-            <button class="tab active" data-tab="pending" onclick="switchTab('pending')">Pending</button>
-            <button class="tab" data-tab="complete" onclick="switchTab('complete')">Complete</button>
-        </div>
+        <!-- Add Expense Form -->
+        <section>
+            <h2>Add Expense</h2>
+            
+            <label>Amount</label>
+            <input type="number" id="amount-input" placeholder="0.00">
+            
+            <label>Currency</label>
+            <select id="currency-input">
+                <option value="USD">USD</option>
+                <option value="CAD">CAD</option>
+            </select>
+            
+            <label>Category</label>
+            <select id="category-input">
+                <option value="Food">Food</option>
+                <option value="Transport">Transport</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Bills">Bills</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Health">Health</option>
+                <option value="Other">Other</option>
+            </select>
+            
+            <label>Description</label>
+            <input type="text" id="description-input" placeholder="What did you spend on?">
+            
+            <label>Date</label>
+            <input type="date" id="date-input">
+            
+            <button id="add-expense-btn">Add Expense</button>
+        </section>
 
-        <div id="gigList" class="gig-list"></div>
-    </main>
+        <!-- Expense List -->
+        <section>
+            <h2>Recent Expenses</h2>
+            <div id="expense-list">
+                <p>No expenses yet.</p>
+            </div>
+        </section>
 
-    <!-- Modal -->
-    <div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
-        <div class="modal" onclick="event.stopPropagation()">
+        <!-- Add Income Form -->
+        <section>
+            <h2>Add Income</h2>
+            
+            <label>Amount</label>
+            <input type="number" id="income-amount-input" placeholder="0.00">
+            
+            <label>Currency</label>
+            <select id="income-currency-input">
+                <option value="USD">USD</option>
+                <option value="CAD">CAD</option>
+            </select>
+            
+            <label>Source</label>
+            <select id="income-source-input">
+                <option value="Salary">Salary</option>
+                <option value="Freelance">Freelance</option>
+                <option value="Investment">Investment</option>
+                <option value="Gift">Gift</option>
+                <option value="Refund">Refund</option>
+                <option value="Other">Other</option>
+            </select>
+            
+            <label>Description</label>
+            <input type="text" id="income-description-input" placeholder="Income details">
+            
+            <label>Date</label>
+            <input type="date" id="income-date-input">
+            
+            <button id="add-income-btn">Add Income</button>
+        </section>
+
+        <!-- Recent Income List -->
+        <section>
+            <h2>Recent Income</h2>
+            <div id="income-list">
+                <p>No income yet.</p>
+            </div>
+        </section>
+
+        <!-- Subscriptions Section -->
+        <section>
+            <h2>Subscriptions</h2>
+            <div id="subscription-list">
+                <p>No subscriptions yet.</p>
+            </div>
+            <button id="add-subscription-btn" style="width: 100%; margin-top: 16px;">+ Add Subscription</button>
+        </section>
+        
+    </div>
+
+    <!-- ============================================
+         HISTORY PAGE (Calendar)
+         ============================================ -->
+    <div id="history-page" class="page">
+        
+        <section>
+            <div class="calendar-header">
+                <button id="prev-month-btn">‹</button>
+                <h3 id="calendar-month-label">January 2025</h3>
+                <button id="next-month-btn">›</button>
+            </div>
+            <div class="calendar-grid" id="calendar-grid">
+                <!-- Calendar days will be generated by JavaScript -->
+            </div>
+        </section>
+        
+    </div>
+
+    <!-- ============================================
+         TRENDS PAGE
+         ============================================ -->
+    <div id="trends-page" class="page">
+        
+        <!-- Key Stats -->
+        <section>
+            <h2>This Month - Expenses</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-total-spent">$0</div>
+                    <div class="stat-label">USD Spent</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-total-spent-cad">$0</div>
+                    <div class="stat-label">CAD Spent</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-avg-transaction">$0</div>
+                    <div class="stat-label">Avg / Trans.</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-transaction-count">0</div>
+                    <div class="stat-label">Trans.</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Income Stats -->
+        <section>
+            <h2>This Month - Income</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-total-income" style="color: #27ae60;">$0</div>
+                    <div class="stat-label">USD Income</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-total-income-cad" style="color: #27ae60;">$0</div>
+                    <div class="stat-label">CAD Income</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-income-avg">$0</div>
+                    <div class="stat-label">Avg / Trans.</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-income-count">0</div>
+                    <div class="stat-label">Trans.</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Rollover Section -->
+        <section>
+            <h2>Monthly Rollover</h2>
+            <div style="text-align: center; padding: 20px 0;">
+                <div id="rollover-amount" style="font-size: 2rem; font-weight: 700;">$0.00</div>
+                <div style="color: #9a9a9a; font-size: 0.85rem; margin-top: 4px;">USD</div>
+            </div>
+        </section>
+        
+        <!-- Spending by Category -->
+        <section>
+            <h2>Spending by Category</h2>
+            <div id="category-breakdown">
+                <!-- Category bars will be generated by JavaScript -->
+            </div>
+        </section>
+        
+        <!-- Income by Source -->
+        <section>
+            <h2>Income by Source</h2>
+            <div id="income-breakdown">
+                <!-- Income sources will be generated by JavaScript -->
+            </div>
+        </section>
+        
+        <!-- Monthly History -->
+        <section>
+            <h2>Monthly History</h2>
+            <div class="year-selector">
+                <button id="prev-year-btn">‹</button>
+                <span id="history-year-label">2026</span>
+                <button id="next-year-btn">›</button>
+            </div>
+            <div id="monthly-history">
+                <!-- Month grid will be generated by JavaScript -->
+            </div>
+        </section>
+        
+    </div>
+
+    <!-- ============================================
+         DEBT PAGE
+         ============================================ -->
+    <div id="debt-page" class="page">
+        
+        <!-- Card Selector -->
+        <section>
+            <h2>Credit Cards</h2>
+            <select id="card-selector" style="margin-bottom: 12px;">
+                <!-- Options will be populated by JavaScript -->
+            </select>
+            <div style="display: flex; gap: 8px;">
+                <button id="add-card-btn" style="flex: 1;">+ Add Card</button>
+                <button id="edit-card-btn" style="flex: 1;">Edit Name</button>
+                <button id="delete-card-btn" style="flex: 1; background: #e74c3c;">Delete</button>
+            </div>
+        </section>
+        
+        <!-- Debt Overview -->
+        <section>
+            <h2 id="debt-card-title">Credit Card</h2>
+            <div style="text-align: center; padding: 20px 0;">
+                <div style="color: #9a9a9a; font-size: 0.85rem;">Current Balance</div>
+                <div id="debt-balance" style="font-size: 2rem; font-weight: 700; color: #e74c3c;">$0.00 CAD</div>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding-top: 16px; border-top: 1px solid #f0f0f0;">
+                <div style="text-align: center; flex: 1;">
+                    <div style="color: #9a9a9a; font-size: 0.75rem;">TOTAL PAID</div>
+                    <div id="debt-total-paid" style="font-weight: 600; color: #27ae60;">$0.00</div>
+                </div>
+                <div style="text-align: center; flex: 1;">
+                    <div style="color: #9a9a9a; font-size: 0.75rem;">PAID THIS MONTH</div>
+                    <div id="debt-paid-this-month" style="font-weight: 600; color: #27ae60;">$0.00</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Update Balance -->
+        <section>
+            <h2>Update Balance</h2>
+            <label>New Balance (CAD)</label>
+            <input type="number" id="debt-balance-input" placeholder="0.00">
+            <button id="update-balance-btn" style="width: 100%; margin-top: 16px;">Update Balance</button>
+        </section>
+        
+        <!-- Add Payment -->
+        <section>
+            <h2>Add Payment</h2>
+            <label>Payment Amount (CAD)</label>
+            <input type="number" id="debt-payment-input" placeholder="0.00">
+            <label>Date</label>
+            <input type="date" id="debt-payment-date">
+            <button id="add-payment-btn" style="width: 100%; margin-top: 16px;">Add Payment</button>
+        </section>
+        
+        <!-- Payment History -->
+        <section>
+            <h2>Payment History</h2>
+            <div id="payment-history">
+                <p>No payments yet.</p>
+            </div>
+        </section>
+        
+    </div>
+
+    <!-- ============================================
+         NAVIGATION BAR
+         ============================================ -->
+    <nav>
+        <button id="nav-home" class="active">Home</button>
+        <button id="nav-history">History</button>
+        <button id="nav-trends">Trends</button>
+        <button id="nav-debt">Debt</button>
+    </nav>
+
+    <!-- ============================================
+         EXPENSE DETAIL MODAL
+         ============================================ -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
             <div class="modal-header">
-                <h2 id="modalTitle">New Gig</h2>
-                <button class="modal-close" onclick="closeModal()">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                        <path d="M18 6L6 18M6 6l12 12"/>
-                    </svg>
-                </button>
+                <h3 id="modal-date">January 15, 2026</h3>
+                <button class="modal-close" id="modal-close">×</button>
             </div>
-            <div class="modal-body">
-                <form id="gigForm">
-                    <input type="hidden" id="gigId">
-                    
-                    <!-- Basic Info -->
-                    <div class="form-group">
-                        <label class="form-label">Venue Name *</label>
-                        <input type="text" class="form-input" id="venue" required>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Date</label>
-                            <div class="date-input-wrapper">
-                                <input type="date" class="form-input" id="date" onclick="this.showPicker()">
-                                <svg class="date-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                                    <line x1="16" y1="2" x2="16" y2="6"/>
-                                    <line x1="8" y1="2" x2="8" y2="6"/>
-                                    <line x1="3" y1="10" x2="21" y2="10"/>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">City</label>
-                            <input type="text" class="form-input" id="city">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Contact Name</label>
-                        <input type="text" class="form-input" id="contact">
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-input" id="email">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Phone</label>
-                            <input type="tel" class="form-input" id="phone">
-                        </div>
-                    </div>
-
-                    <!-- General Section -->
-                    <div class="section open">
-                        <div class="section-header" onclick="toggleSection(this)">
-                            <span>General</span>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                                <path d="M6 9l6 6 6-6"/>
-                            </svg>
-                        </div>
-                        <div class="section-content">
-                            <div class="checklist-item">
-                                <div class="checklist-question">Have the riders been provided?</div>
-                                <div class="toggle-group">
-                                    <button type="button" class="toggle-btn" data-field="riders" data-value="yes">Yes</button>
-                                    <button type="button" class="toggle-btn" data-field="riders" data-value="no">No</button>
-                                    <button type="button" class="toggle-btn" data-field="riders" data-value="tbd">TBD</button>
-                                </div>
-                                <textarea class="checklist-notes" data-notes="riders" placeholder="Notes..."></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Video Section -->
-                    <div class="section">
-                        <div class="section-header" onclick="toggleSection(this)">
-                            <span>Video</span>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                                <path d="M6 9l6 6 6-6"/>
-                            </svg>
-                        </div>
-                        <div class="section-content">
-                            <div class="checklist-item">
-                                <div class="checklist-question">Is video projection available?</div>
-                                <div class="toggle-group">
-                                    <button type="button" class="toggle-btn" data-field="videoProjection" data-value="yes">Yes</button>
-                                    <button type="button" class="toggle-btn" data-field="videoProjection" data-value="no">No</button>
-                                    <button type="button" class="toggle-btn" data-field="videoProjection" data-value="tbd">TBD</button>
-                                </div>
-                                <textarea class="checklist-notes" data-notes="videoProjection" placeholder="Notes..."></textarea>
-                            </div>
-
-                            <div class="checklist-item">
-                                <div class="checklist-question">Is there an operator available to run cue lab?</div>
-                                <div class="toggle-group">
-                                    <button type="button" class="toggle-btn" data-field="videoOperator" data-value="yes">Yes</button>
-                                    <button type="button" class="toggle-btn" data-field="videoOperator" data-value="no">No</button>
-                                    <button type="button" class="toggle-btn" data-field="videoOperator" data-value="tbd">TBD</button>
-                                </div>
-                                <textarea class="checklist-notes" data-notes="videoOperator" placeholder="Notes..."></textarea>
-                            </div>
-
-                            <div class="checklist-item">
-                                <div class="checklist-question">Is there a fee for the operator?</div>
-                                <div class="toggle-group">
-                                    <button type="button" class="toggle-btn" data-field="operatorFee" data-value="yes">Yes</button>
-                                    <button type="button" class="toggle-btn" data-field="operatorFee" data-value="no">No</button>
-                                    <button type="button" class="toggle-btn" data-field="operatorFee" data-value="tbd">TBD</button>
-                                </div>
-                                <textarea class="checklist-notes" data-notes="operatorFee" placeholder="Fee amount..."></textarea>
-                            </div>
-
-                            <div class="checklist-item">
-                                <div class="checklist-question">Does the operator need a cue sheet?</div>
-                                <div class="toggle-group">
-                                    <button type="button" class="toggle-btn" data-field="cueSheet" data-value="yes">Yes</button>
-                                    <button type="button" class="toggle-btn" data-field="cueSheet" data-value="no">No</button>
-                                    <button type="button" class="toggle-btn" data-field="cueSheet" data-value="tbd">TBD</button>
-                                </div>
-                                <textarea class="checklist-notes" data-notes="cueSheet" placeholder="When is it due?"></textarea>
-                            </div>
-
-                            <div class="checklist-item">
-                                <div class="checklist-question">Screen dimensions (16:9)?</div>
-                                <div class="toggle-group">
-                                    <button type="button" class="toggle-btn" data-field="screenDimensions" data-value="yes">Yes</button>
-                                    <button type="button" class="toggle-btn" data-field="screenDimensions" data-value="no">No</button>
-                                    <button type="button" class="toggle-btn" data-field="screenDimensions" data-value="tbd">TBD</button>
-                                </div>
-                                <textarea class="checklist-notes" data-notes="screenDimensions" placeholder="Exact dimensions..."></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Audio Section -->
-                    <div class="section">
-                        <div class="section-header" onclick="toggleSection(this)">
-                            <span>Audio</span>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                                <path d="M6 9l6 6 6-6"/>
-                            </svg>
-                        </div>
-                        <div class="section-content">
-                            <div class="checklist-item">
-                                <div class="checklist-question">Can we record from the board with a Zoom recorder?</div>
-                                <div class="toggle-group">
-                                    <button type="button" class="toggle-btn" data-field="zoomRecorder" data-value="yes">Yes</button>
-                                    <button type="button" class="toggle-btn" data-field="zoomRecorder" data-value="no">No</button>
-                                    <button type="button" class="toggle-btn" data-field="zoomRecorder" data-value="tbd">TBD</button>
-                                </div>
-                                <textarea class="checklist-notes" data-notes="zoomRecorder" placeholder="Notes..."></textarea>
-                            </div>
-
-                            <div class="checklist-item">
-                                <div class="checklist-question">Can we use Dante Sound Card?</div>
-                                <div class="toggle-group">
-                                    <button type="button" class="toggle-btn" data-field="danteCard" data-value="yes">Yes</button>
-                                    <button type="button" class="toggle-btn" data-field="danteCard" data-value="no">No</button>
-                                    <button type="button" class="toggle-btn" data-field="danteCard" data-value="tbd">TBD</button>
-                                </div>
-                                <textarea class="checklist-notes" data-notes="danteCard" placeholder="Notes..."></textarea>
-                            </div>
-
-                            <div class="checklist-item">
-                                <div class="checklist-question">Can we get stems onto hard drive?</div>
-                                <div class="toggle-group">
-                                    <button type="button" class="toggle-btn" data-field="stemsHardDrive" data-value="yes">Yes</button>
-                                    <button type="button" class="toggle-btn" data-field="stemsHardDrive" data-value="no">No</button>
-                                    <button type="button" class="toggle-btn" data-field="stemsHardDrive" data-value="tbd">TBD</button>
-                                </div>
-                                <textarea class="checklist-notes" data-notes="stemsHardDrive" placeholder="Notes..."></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Lighting Section -->
-                    <div class="section">
-                        <div class="section-header" onclick="toggleSection(this)">
-                            <span>Lighting</span>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                                <path d="M6 9l6 6 6-6"/>
-                            </svg>
-                        </div>
-                        <div class="section-content">
-                            <div class="checklist-item">
-                                <div class="checklist-question">Will there be a lighting technician?</div>
-                                <div class="toggle-group">
-                                    <button type="button" class="toggle-btn" data-field="lightingTech" data-value="yes">Yes</button>
-                                    <button type="button" class="toggle-btn" data-field="lightingTech" data-value="no">No</button>
-                                    <button type="button" class="toggle-btn" data-field="lightingTech" data-value="tbd">TBD</button>
-                                </div>
-                                <textarea class="checklist-notes" data-notes="lightingTech" placeholder="Notes..."></textarea>
-                            </div>
-
-                            <div class="checklist-item">
-                                <div class="checklist-question">Do you offer a follow spot?</div>
-                                <div class="toggle-group">
-                                    <button type="button" class="toggle-btn" data-field="followSpot" data-value="yes">Yes</button>
-                                    <button type="button" class="toggle-btn" data-field="followSpot" data-value="no">No</button>
-                                    <button type="button" class="toggle-btn" data-field="followSpot" data-value="tbd">TBD</button>
-                                </div>
-                                <textarea class="checklist-notes" data-notes="followSpot" placeholder="Notes..."></textarea>
-                            </div>
-
-                            <div class="checklist-item">
-                                <div class="checklist-question">Is there a fee for the follow spot?</div>
-                                <div class="toggle-group">
-                                    <button type="button" class="toggle-btn" data-field="followSpotFee" data-value="yes">Yes</button>
-                                    <button type="button" class="toggle-btn" data-field="followSpotFee" data-value="no">No</button>
-                                    <button type="button" class="toggle-btn" data-field="followSpotFee" data-value="tbd">TBD</button>
-                                </div>
-                                <textarea class="checklist-notes" data-notes="followSpotFee" placeholder="Fee amount..."></textarea>
-                            </div>
-
-                            <div class="checklist-item">
-                                <div class="checklist-question">Can I send over lighting notes?</div>
-                                <div class="toggle-group">
-                                    <button type="button" class="toggle-btn" data-field="lightingNotes" data-value="yes">Yes</button>
-                                    <button type="button" class="toggle-btn" data-field="lightingNotes" data-value="no">No</button>
-                                    <button type="button" class="toggle-btn" data-field="lightingNotes" data-value="tbd">TBD</button>
-                                </div>
-                                <textarea class="checklist-notes" data-notes="lightingNotes" placeholder="When are they due?"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- General Notes -->
-                    <div class="form-group" style="margin-top: 16px;">
-                        <label class="form-label">General Notes</label>
-                        <textarea class="form-textarea" id="generalNotes" placeholder="Additional notes about this gig..."></textarea>
-                    </div>
-
-                    <!-- Status (at end of form) -->
-                    <div class="form-group">
-                        <label class="form-label">Status</label>
-                        <select class="form-select" id="status">
-                            <option value="pending">Pending</option>
-                            <option value="complete">Complete</option>
-                        </select>
-                    </div>
-
-                    <!-- Delete Button (only shown when editing) -->
-                    <div class="delete-section" id="deleteSection" style="display: none;">
-                        <button type="button" class="delete-btn" onclick="deleteGig()">Delete This Gig</button>
-                    </div>
-                </form>
+            <div id="modal-expenses">
+                <!-- Expense details will be inserted here -->
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="saveGig()">Save Gig</button>
+            <div class="modal-total" id="modal-total">
+                Total: $0.00
             </div>
         </div>
     </div>
 
+    <!-- ============================================
+         MONTH DETAIL MODAL
+         ============================================ -->
+    <div class="modal-overlay" id="month-modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="month-modal-title">January 2026</h3>
+                <button class="modal-close" id="month-modal-close">×</button>
+            </div>
+            <div id="month-modal-content">
+                <!-- Month stats will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         EDIT EXPENSE MODAL
+         ============================================ -->
+    <div class="modal-overlay" id="edit-modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="edit-modal-title">Edit Expense</h3>
+                <button class="modal-close" id="edit-modal-close">×</button>
+            </div>
+            <div class="modal-form">
+                <label>Amount</label>
+                <input type="number" id="edit-amount" placeholder="0.00">
+                
+                <label>Currency</label>
+                <select id="edit-currency">
+                    <option value="USD">USD</option>
+                    <option value="CAD">CAD</option>
+                </select>
+                
+                <label id="edit-category-label">Category</label>
+                <select id="edit-category">
+                    <option value="Food">Food</option>
+                    <option value="Transport">Transport</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Bills">Bills</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Health">Health</option>
+                    <option value="Other">Other</option>
+                </select>
+                
+                <label>Description</label>
+                <input type="text" id="edit-description" placeholder="What did you spend on?">
+                
+                <label>Date</label>
+                <input type="date" id="edit-date">
+                
+                <div class="modal-buttons">
+                    <button class="btn-delete" id="edit-delete-btn">Delete</button>
+                    <button class="btn-save" id="edit-save-btn">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         SUBSCRIPTION MODAL
+         ============================================ -->
+    <div class="modal-overlay" id="subscription-modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="subscription-modal-title">Add Subscription</h3>
+                <button class="modal-close" id="subscription-modal-close">×</button>
+            </div>
+            <div class="modal-form">
+                <label>Name</label>
+                <input type="text" id="subscription-name" placeholder="e.g., Netflix">
+                
+                <label>Amount</label>
+                <input type="number" id="subscription-amount" placeholder="0.00">
+                
+                <label>Currency</label>
+                <select id="subscription-currency">
+                    <option value="USD">USD</option>
+                    <option value="CAD">CAD</option>
+                </select>
+                
+                <label>Category</label>
+                <select id="subscription-category">
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Bills">Bills</option>
+                    <option value="Health">Health</option>
+                    <option value="Other">Other</option>
+                </select>
+                
+                <label>Billing Day (1-31)</label>
+                <input type="number" id="subscription-day" placeholder="15" min="1" max="31">
+                
+                <div class="modal-buttons" id="subscription-buttons">
+                    <button class="btn-save" id="subscription-save-btn" style="flex: 1;">Save</button>
+                </div>
+                <div class="modal-buttons" id="subscription-edit-buttons" style="display: none;">
+                    <button class="btn-delete" id="subscription-delete-btn">Delete</button>
+                    <button class="btn-save" id="subscription-update-btn">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         CARD NAME MODAL
+         ============================================ -->
+    <div class="modal-overlay" id="card-modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="card-modal-title">Add Card</h3>
+                <button class="modal-close" id="card-modal-close">×</button>
+            </div>
+            <div class="modal-form">
+                <label>Card Name</label>
+                <input type="text" id="card-name-input" placeholder="e.g., Visa, Mastercard">
+                
+                <div class="modal-buttons">
+                    <button class="btn-save" id="card-modal-save-btn" style="flex: 1;">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript - The Brain of our App -->
     <script>
-        // Data
-        let gigs = JSON.parse(localStorage.getItem('gigAdvance_gigs')) || [];
-        let currentGigId = null;
-        let currentTab = 'pending';
+        // ============================================
+        // STEP 1: Create variables to store our data
+        // ============================================
+        
+        // This array will hold all our expenses (like a list)
+        // We try to load saved expenses, or start with empty array
+        let expenses = loadFromStorage('expenses', []);
+        
+        // This stores our monthly budget
+        // We try to load saved budget, or start with 0
+        let monthlyBudget = loadFromStorage('monthlyBudget', 0);
 
-        // Theme
-        function initTheme() {
-            const saved = localStorage.getItem('gigAdvance_theme');
-            if (saved) {
-                document.documentElement.setAttribute('data-theme', saved);
-            }
-        }
-
-        function toggleTheme() {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('gigAdvance_theme', next);
-        }
-
-        // Tabs
-        function switchTab(tab) {
-            currentTab = tab;
-            document.querySelectorAll('.tab').forEach(t => {
-                t.classList.toggle('active', t.dataset.tab === tab);
+        // This array will hold all our income
+        let incomes = loadFromStorage('incomes', []);
+        
+        // This array will hold all our subscriptions
+        let subscriptions = loadFromStorage('subscriptions', []);
+        
+        // Debt tracker data - now supports multiple cards
+        let creditCards = loadFromStorage('creditCards', []);
+        let currentCardIndex = loadFromStorage('currentCardIndex', 0);
+        
+        // Migration: if old data exists, convert it
+        let oldDebtBalance = loadFromStorage('debtBalance', null);
+        let oldDebtPayments = loadFromStorage('debtPayments', null);
+        if (oldDebtBalance !== null && creditCards.length === 0) {
+            creditCards.push({
+                name: 'Credit Card',
+                balance: oldDebtBalance,
+                payments: oldDebtPayments || []
             });
-            renderGigs();
+            saveToStorage('creditCards', creditCards);
+            localStorage.removeItem('debtBalance');
+            localStorage.removeItem('debtPayments');
         }
 
-        // Toggle Sections
-        function toggleSection(header) {
-            header.parentElement.classList.toggle('open');
+        // ============================================
+        // STORAGE FUNCTIONS: Save and Load data
+        // ============================================
+        
+        // This function saves data to localStorage
+        function saveToStorage(key, data) {
+            // Convert data to text (JSON format) and save it
+            localStorage.setItem(key, JSON.stringify(data));
         }
-
-        // Modal
-        function openModal(gigId = null) {
-            currentGigId = gigId;
-            const form = document.getElementById('gigForm');
-            form.reset();
+        
+        // This function loads data from localStorage
+        function loadFromStorage(key, defaultValue) {
+            // Try to get the saved data
+            let saved = localStorage.getItem(key);
             
-            // Reset all toggles
-            document.querySelectorAll('.toggle-btn').forEach(btn => {
-                btn.classList.remove('active', 'active-yes', 'active-no');
-            });
+            // If nothing was saved, return the default value
+            if (saved === null) {
+                return defaultValue;
+            }
+            
+            // Convert from text (JSON) back to usable data
+            return JSON.parse(saved);
+        }
 
-            if (gigId) {
-                const gig = gigs.find(g => g.id === gigId);
-                if (gig) {
-                    document.getElementById('modalTitle').textContent = 'Edit Gig';
-                    document.getElementById('gigId').value = gig.id;
-                    document.getElementById('venue').value = gig.venue || '';
-                    document.getElementById('date').value = gig.date || '';
-                    document.getElementById('city').value = gig.city || '';
-                    document.getElementById('contact').value = gig.contact || '';
-                    document.getElementById('email').value = gig.email || '';
-                    document.getElementById('phone').value = gig.phone || '';
-                    document.getElementById('status').value = gig.status || 'pending';
-                    document.getElementById('generalNotes').value = gig.generalNotes || '';
+        // ============================================
+        // STEP 2: Find the HTML elements we need
+        // ============================================
+        
+        // Budget elements
+        const budgetInput = document.getElementById('budget-input');
+        const setBudgetBtn = document.getElementById('set-budget-btn');
+        const budgetDisplay = document.getElementById('budget-display');
+        const spentDisplay = document.getElementById('spent-display');
+        const remainingDisplay = document.getElementById('remaining-display');
+        
+        // Expense form elements
+        const amountInput = document.getElementById('amount-input');
+        const currencyInput = document.getElementById('currency-input');
+        const categoryInput = document.getElementById('category-input');
+        const descriptionInput = document.getElementById('description-input');
+        const dateInput = document.getElementById('date-input');
+        const addExpenseBtn = document.getElementById('add-expense-btn');
+        
+        // Expense list container
+        const expenseList = document.getElementById('expense-list');
 
-                    // Load checklist values
-                    if (gig.checklist) {
-                        Object.keys(gig.checklist).forEach(field => {
-                            const value = gig.checklist[field].value;
-                            const notes = gig.checklist[field].notes;
-                            
-                            if (value) {
-                                const btn = document.querySelector(`[data-field="${field}"][data-value="${value}"]`);
-                                if (btn) {
-                                    btn.classList.add('active');
-                                    if (value === 'yes') btn.classList.add('active-yes');
-                                    if (value === 'no') btn.classList.add('active-no');
-                                }
-                            }
-                            
-                            const notesField = document.querySelector(`[data-notes="${field}"]`);
-                            if (notesField && notes) {
-                                notesField.value = notes;
-                            }
-                        });
-                    }
+        // Income form elements
+        const incomeAmountInput = document.getElementById('income-amount-input');
+        const incomeCurrencyInput = document.getElementById('income-currency-input');
+        const incomeSourceInput = document.getElementById('income-source-input');
+        const incomeDescriptionInput = document.getElementById('income-description-input');
+        const incomeDateInput = document.getElementById('income-date-input');
+        const addIncomeBtn = document.getElementById('add-income-btn');
+        
+        // Income list container
+        const incomeList = document.getElementById('income-list');
 
-                    document.getElementById('deleteSection').style.display = 'block';
+        // ============================================
+        // STEP 3: Create functions (reusable actions)
+        // ============================================
+        
+        // This function updates the budget display
+        function updateDisplay() {
+            // Get current month and year
+            let now = new Date();
+            let currentMonth = now.getMonth();
+            let currentYear = now.getFullYear();
+            
+            // Calculate total spent for CURRENT MONTH ONLY
+            let totalSpent = 0;
+            for (let i = 0; i < expenses.length; i++) {
+                let expenseDate = new Date(expenses[i].date);
+                if (expenseDate.getMonth() === currentMonth && expenseDate.getFullYear() === currentYear) {
+                    totalSpent = totalSpent + expenses[i].amount;
                 }
-            } else {
-                document.getElementById('modalTitle').textContent = 'New Gig';
-                document.getElementById('deleteSection').style.display = 'none';
             }
-
-            document.getElementById('modalOverlay').classList.add('active');
-            document.body.style.overflow = 'hidden';
+            
+            // Calculate remaining
+            let remaining = monthlyBudget - totalSpent;
+            
+            // Update the numbers shown on screen
+            budgetDisplay.textContent = monthlyBudget.toFixed(2);
+            spentDisplay.textContent = totalSpent.toFixed(2);
+            remainingDisplay.textContent = remaining.toFixed(2);
         }
-
-        function closeModal() {
-            document.getElementById('modalOverlay').classList.remove('active');
-            document.body.style.overflow = '';
-            currentGigId = null;
-        }
-
-        function handleOverlayClick(event) {
-            if (event.target === event.currentTarget) {
-                closeModal();
+        
+        // This function displays all expenses in the list
+        function displayExpenses() {
+            // If no expenses, show message
+            if (expenses.length === 0) {
+                expenseList.innerHTML = '<p>No expenses yet.</p>';
+                return;
             }
-        }
-
-        // Toggle buttons
-        document.querySelectorAll('.toggle-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const field = this.dataset.field;
-                const value = this.dataset.value;
-                
-                // Remove active from siblings
-                document.querySelectorAll(`[data-field="${field}"]`).forEach(b => {
-                    b.classList.remove('active', 'active-yes', 'active-no');
+            
+            // Get only the last 3 expenses (most recent first)
+            let recentExpenses = expenses.slice(-3).reverse();
+            
+            // Build the HTML for each expense
+            let html = '';
+            for (let i = 0; i < recentExpenses.length; i++) {
+                let expense = recentExpenses[i];
+                let currency = expense.currency || 'USD';
+                // Find the actual index in the full expenses array
+                let actualIndex = expenses.indexOf(expense);
+                html = html + '<div class="expense-item" data-expense-index="' + actualIndex + '">';
+                html = html + '<div><strong>' + expense.category + ':</strong> $' + expense.amount.toFixed(2) + ' ' + currency + '</div>';
+                html = html + '<div style="color: #9a9a9a; font-size: 0.85rem; margin-top: 4px;">' + expense.description + ' · ' + expense.date + '</div>';
+                html = html + '</div>';
+            }
+            
+            // Put the HTML into the expense list container
+            expenseList.innerHTML = html;
+            
+            // Add click handlers to open edit modal
+            let items = expenseList.querySelectorAll('.expense-item');
+            for (let i = 0; i < items.length; i++) {
+                items[i].addEventListener('click', function() {
+                    let index = parseInt(this.getAttribute('data-expense-index'));
+                    openEditModal(index, 'expense');
                 });
-                
-                // Add active to clicked
-                this.classList.add('active');
-                if (value === 'yes') this.classList.add('active-yes');
-                if (value === 'no') this.classList.add('active-no');
-            });
+            }
+        }
+        
+        // This function displays recent incomes in the list
+        function displayIncomes() {
+            // If no incomes, show message
+            if (incomes.length === 0) {
+                incomeList.innerHTML = '<p>No income yet.</p>';
+                return;
+            }
+            
+            // Get only the last 3 incomes (most recent first)
+            let recentIncomes = incomes.slice(-3).reverse();
+            
+            // Build the HTML for each income
+            let html = '';
+            for (let i = 0; i < recentIncomes.length; i++) {
+                let income = recentIncomes[i];
+                let currency = income.currency || 'USD';
+                // Find the actual index in the full incomes array
+                let actualIndex = incomes.indexOf(income);
+                html = html + '<div class="expense-item income-item" data-income-index="' + actualIndex + '">';
+                html = html + '<div><strong>' + income.source + ':</strong> <span style="color: #27ae60;">+$' + income.amount.toFixed(2) + ' ' + currency + '</span></div>';
+                html = html + '<div style="color: #9a9a9a; font-size: 0.85rem; margin-top: 4px;">' + income.description + ' · ' + income.date + '</div>';
+                html = html + '</div>';
+            }
+            
+            // Put the HTML into the income list container
+            incomeList.innerHTML = html;
+            
+            // Add click handlers to open edit modal
+            let items = incomeList.querySelectorAll('.income-item');
+            for (let i = 0; i < items.length; i++) {
+                items[i].addEventListener('click', function() {
+                    let index = parseInt(this.getAttribute('data-income-index'));
+                    openEditModal(index, 'income');
+                });
+            }
+        }
+
+        // ============================================
+        // STEP 4: Set up button click actions
+        // ============================================
+        
+        // When "Set" budget button is clicked
+        setBudgetBtn.addEventListener('click', function() {
+            // Get the value from the input and convert to a number
+            monthlyBudget = parseFloat(budgetInput.value) || 0;
+            
+            // Save to localStorage so it persists
+            saveToStorage('monthlyBudget', monthlyBudget);
+            
+            // Update the display
+            updateDisplay();
+            
+            // Clear the input
+            budgetInput.value = '';
+        });
+        
+        // When "Add Expense" button is clicked
+        addExpenseBtn.addEventListener('click', function() {
+            // Get values from all inputs
+            let amount = parseFloat(amountInput.value);
+            let currency = currencyInput.value;
+            let category = categoryInput.value;
+            let description = descriptionInput.value;
+            let date = dateInput.value;
+            
+            // Check if amount is valid
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+            
+            // Check if date is entered
+            if (!date) {
+                alert('Please enter a date');
+                return;
+            }
+            
+            // Create an expense object (a bundle of related data)
+            let expense = {
+                amount: amount,
+                currency: currency,
+                category: category,
+                description: description,
+                date: date
+            };
+            
+            // Add to our list of expenses
+            expenses.push(expense);
+            
+            // Save to localStorage so it persists
+            saveToStorage('expenses', expenses);
+            
+            // Update what's shown on screen
+            updateDisplay();
+            displayExpenses();
+            
+            // Clear the form inputs
+            amountInput.value = '';
+            descriptionInput.value = '';
+            dateInput.value = '';
+        });
+        
+        // When "Add Income" button is clicked
+        addIncomeBtn.addEventListener('click', function() {
+            // Get values from all inputs
+            let amount = parseFloat(incomeAmountInput.value);
+            let currency = incomeCurrencyInput.value;
+            let source = incomeSourceInput.value;
+            let description = incomeDescriptionInput.value;
+            let date = incomeDateInput.value;
+            
+            // Check if amount is valid
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+            
+            // Check if date is entered
+            if (!date) {
+                alert('Please enter a date');
+                return;
+            }
+            
+            // Create an income object
+            let income = {
+                amount: amount,
+                currency: currency,
+                source: source,
+                description: description,
+                date: date
+            };
+            
+            // Add to our list of incomes
+            incomes.push(income);
+            
+            // Save to localStorage
+            saveToStorage('incomes', incomes);
+            
+            // Update what's shown on screen
+            displayIncomes();
+            
+            // Clear the form inputs
+            incomeAmountInput.value = '';
+            incomeDescriptionInput.value = '';
+            incomeDateInput.value = '';
         });
 
-        // Save
-        function saveGig() {
-            const venue = document.getElementById('venue').value.trim();
-            if (!venue) {
-                alert('Please enter a venue name');
-                return;
-            }
+        // ============================================
+        // STEP 5: Load saved data when page opens
+        // ============================================
+        
+        // Show any saved data right away
+        updateDisplay();
+        displayExpenses();
+        displayIncomes();
 
-            const checklist = {};
-            document.querySelectorAll('.toggle-btn.active').forEach(btn => {
-                const field = btn.dataset.field;
-                const value = btn.dataset.value;
-                if (!checklist[field]) checklist[field] = {};
-                checklist[field].value = value;
-            });
+        // ============================================
+        // NAVIGATION: Switching between pages
+        // ============================================
+        
+        const navHome = document.getElementById('nav-home');
+        const navHistory = document.getElementById('nav-history');
+        const navTrends = document.getElementById('nav-trends');
+        const navDebt = document.getElementById('nav-debt');
+        const homePage = document.getElementById('home-page');
+        const historyPage = document.getElementById('history-page');
+        const trendsPage = document.getElementById('trends-page');
+        const debtPage = document.getElementById('debt-page');
+        
+        navHome.addEventListener('click', function() {
+            // Show home page, hide others
+            homePage.classList.add('active');
+            historyPage.classList.remove('active');
+            trendsPage.classList.remove('active');
+            debtPage.classList.remove('active');
+            
+            // Update nav button styles
+            navHome.classList.add('active');
+            navHistory.classList.remove('active');
+            navTrends.classList.remove('active');
+            navDebt.classList.remove('active');
+        });
+        
+        navHistory.addEventListener('click', function() {
+            // Show history page, hide others
+            historyPage.classList.add('active');
+            homePage.classList.remove('active');
+            trendsPage.classList.remove('active');
+            debtPage.classList.remove('active');
+            
+            // Update nav button styles
+            navHistory.classList.add('active');
+            navHome.classList.remove('active');
+            navTrends.classList.remove('active');
+            navDebt.classList.remove('active');
+            
+            // Render the calendar
+            renderCalendar();
+        });
+        
+        navTrends.addEventListener('click', function() {
+            // Show trends page, hide others
+            trendsPage.classList.add('active');
+            homePage.classList.remove('active');
+            historyPage.classList.remove('active');
+            debtPage.classList.remove('active');
+            
+            // Update nav button styles
+            navTrends.classList.add('active');
+            navHome.classList.remove('active');
+            navHistory.classList.remove('active');
+            navDebt.classList.remove('active');
+            
+            // Render the trends
+            renderTrends();
+        });
+        
+        navDebt.addEventListener('click', function() {
+            // Show debt page, hide others
+            debtPage.classList.add('active');
+            homePage.classList.remove('active');
+            historyPage.classList.remove('active');
+            trendsPage.classList.remove('active');
+            
+            // Update nav button styles
+            navDebt.classList.add('active');
+            navHome.classList.remove('active');
+            navHistory.classList.remove('active');
+            navTrends.classList.remove('active');
+            
+            // Render debt info
+            renderDebt();
+        });
 
-            document.querySelectorAll('.checklist-notes').forEach(textarea => {
-                const field = textarea.dataset.notes;
-                if (!checklist[field]) checklist[field] = {};
-                checklist[field].notes = textarea.value;
-            });
-
-            const gigData = {
-                id: currentGigId || Date.now().toString(),
-                venue: venue,
-                date: document.getElementById('date').value,
-                city: document.getElementById('city').value,
-                contact: document.getElementById('contact').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                status: document.getElementById('status').value,
-                generalNotes: document.getElementById('generalNotes').value,
-                checklist: checklist,
-                updatedAt: new Date().toISOString()
-            };
-
-            if (currentGigId) {
-                const index = gigs.findIndex(g => g.id === currentGigId);
-                if (index !== -1) {
-                    gigs[index] = gigData;
+        // ============================================
+        // CALENDAR: Display monthly view with totals
+        // ============================================
+        
+        // Track which month we're viewing
+        let currentCalendarDate = new Date();
+        
+        const calendarGrid = document.getElementById('calendar-grid');
+        const calendarMonthLabel = document.getElementById('calendar-month-label');
+        const prevMonthBtn = document.getElementById('prev-month-btn');
+        const nextMonthBtn = document.getElementById('next-month-btn');
+        
+        // Month navigation
+        prevMonthBtn.addEventListener('click', function() {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+            renderCalendar();
+        });
+        
+        nextMonthBtn.addEventListener('click', function() {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+            renderCalendar();
+        });
+        
+        // Calculate daily totals from expenses
+        function getDailyTotals() {
+            let totals = {};
+            
+            for (let i = 0; i < expenses.length; i++) {
+                let date = expenses[i].date;
+                if (!totals[date]) {
+                    totals[date] = { expenses: 0, income: 0 };
                 }
-            } else {
-                gigData.createdAt = new Date().toISOString();
-                gigs.unshift(gigData);
+                totals[date].expenses = totals[date].expenses + expenses[i].amount;
             }
-
-            saveData();
-            closeModal();
-            renderGigs();
+            
+            for (let i = 0; i < incomes.length; i++) {
+                let date = incomes[i].date;
+                if (!totals[date]) {
+                    totals[date] = { expenses: 0, income: 0 };
+                }
+                totals[date].income = totals[date].income + incomes[i].amount;
+            }
+            
+            return totals;
+        }
+        
+        // Render the calendar
+        function renderCalendar() {
+            let year = currentCalendarDate.getFullYear();
+            let month = currentCalendarDate.getMonth();
+            
+            // Update the month label
+            let monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                              'July', 'August', 'September', 'October', 'November', 'December'];
+            calendarMonthLabel.textContent = monthNames[month] + ' ' + year;
+            
+            // Get first day of month and number of days
+            let firstDay = new Date(year, month, 1).getDay();
+            let daysInMonth = new Date(year, month + 1, 0).getDate();
+            let daysInPrevMonth = new Date(year, month, 0).getDate();
+            
+            // Get daily expense totals
+            let dailyTotals = getDailyTotals();
+            
+            // Build calendar HTML
+            let html = '';
+            
+            // Day labels (Sun-Sat)
+            let dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            for (let i = 0; i < 7; i++) {
+                html = html + '<div class="day-label">' + dayLabels[i] + '</div>';
+            }
+            
+            // Previous month's trailing days
+            for (let i = firstDay - 1; i >= 0; i--) {
+                let day = daysInPrevMonth - i;
+                html = html + '<div class="day other-month">' + day + '</div>';
+            }
+            
+            // Current month's days
+            for (let day = 1; day <= daysInMonth; day++) {
+                // Format date to match our expense date format (YYYY-MM-DD)
+                let dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+                
+                let dayData = dailyTotals[dateStr];
+                let hasData = dayData ? true : false;
+                let classes = 'day';
+                if (hasData) {
+                    classes = classes + ' has-expense';
+                }
+                
+                html = html + '<div class="' + classes + '"' + (hasData ? ' data-date="' + dateStr + '"' : '') + '>';
+                html = html + day;
+                if (hasData) {
+                    if (dayData.income > 0) {
+                        html = html + '<span class="amount income-amount">+$' + dayData.income.toFixed(0) + '</span>';
+                    }
+                    if (dayData.expenses > 0) {
+                        html = html + '<span class="amount">-$' + dayData.expenses.toFixed(0) + '</span>';
+                    }
+                }
+                html = html + '</div>';
+            }
+            
+            // Next month's leading days (fill remaining cells)
+            let totalCells = firstDay + daysInMonth;
+            let remainingCells = 7 - (totalCells % 7);
+            if (remainingCells < 7) {
+                for (let day = 1; day <= remainingCells; day++) {
+                    html = html + '<div class="day other-month">' + day + '</div>';
+                }
+            }
+            
+            calendarGrid.innerHTML = html;
+            
+            // Add click handlers to days with expenses
+            let expenseDays = calendarGrid.querySelectorAll('.day.has-expense');
+            for (let i = 0; i < expenseDays.length; i++) {
+                expenseDays[i].addEventListener('click', function() {
+                    let dateStr = this.getAttribute('data-date');
+                    openExpenseModal(dateStr);
+                });
+            }
         }
 
-        // Delete
-        function deleteGig() {
-            if (confirm('Are you sure you want to delete this gig?')) {
-                gigs = gigs.filter(g => g.id !== currentGigId);
-                saveData();
+        // ============================================
+        // MODAL: Show expense details for a day
+        // ============================================
+        
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalClose = document.getElementById('modal-close');
+        const modalDate = document.getElementById('modal-date');
+        const modalExpenses = document.getElementById('modal-expenses');
+        const modalTotal = document.getElementById('modal-total');
+        
+        function openExpenseModal(dateStr) {
+            // Format the date nicely for display
+            let dateParts = dateStr.split('-');
+            let dateObj = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+            let monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                              'July', 'August', 'September', 'October', 'November', 'December'];
+            let formattedDate = monthNames[dateObj.getMonth()] + ' ' + dateObj.getDate() + ', ' + dateObj.getFullYear();
+            modalDate.textContent = formattedDate;
+            
+            // Find all expenses for this date
+            let dayExpenses = [];
+            for (let i = 0; i < expenses.length; i++) {
+                if (expenses[i].date === dateStr) {
+                    dayExpenses.push({ item: expenses[i], index: i, type: 'expense' });
+                }
+            }
+            
+            // Find all income for this date
+            let dayIncomes = [];
+            for (let i = 0; i < incomes.length; i++) {
+                if (incomes[i].date === dateStr) {
+                    dayIncomes.push({ item: incomes[i], index: i, type: 'income' });
+                }
+            }
+            
+            // Build list HTML
+            let html = '';
+            let totalExpenses = 0;
+            let totalIncome = 0;
+            
+            // Income section
+            if (dayIncomes.length > 0) {
+                html = html + '<div style="color: #9a9a9a; font-size: 0.8rem; margin-bottom: 8px;">INCOME</div>';
+                for (let i = 0; i < dayIncomes.length; i++) {
+                    let income = dayIncomes[i].item;
+                    let index = dayIncomes[i].index;
+                    totalIncome = totalIncome + income.amount;
+                    html = html + '<div class="modal-expense expense-item" data-income-index="' + index + '" data-type="income">';
+                    html = html + '<div><strong>' + income.source + ':</strong> <span style="color: #27ae60;">+$' + income.amount.toFixed(2) + '</span></div>';
+                    if (income.description) {
+                        html = html + '<div style="color: #9a9a9a; font-size: 0.85rem; margin-top: 4px;">' + income.description + '</div>';
+                    }
+                    html = html + '</div>';
+                }
+            }
+            
+            // Expenses section
+            if (dayExpenses.length > 0) {
+                html = html + '<div style="color: #9a9a9a; font-size: 0.8rem; margin-bottom: 8px; margin-top: 16px;">EXPENSES</div>';
+                for (let i = 0; i < dayExpenses.length; i++) {
+                    let expense = dayExpenses[i].item;
+                    let index = dayExpenses[i].index;
+                    totalExpenses = totalExpenses + expense.amount;
+                    html = html + '<div class="modal-expense expense-item" data-expense-index="' + index + '" data-type="expense">';
+                    html = html + '<div><strong>' + expense.category + ':</strong> <span style="color: #e74c3c;">-$' + expense.amount.toFixed(2) + '</span></div>';
+                    if (expense.description) {
+                        html = html + '<div style="color: #9a9a9a; font-size: 0.85rem; margin-top: 4px;">' + expense.description + '</div>';
+                    }
+                    html = html + '</div>';
+                }
+            }
+            
+            modalExpenses.innerHTML = html;
+            
+            // Build total display
+            let totalHtml = '';
+            if (totalIncome > 0) {
+                totalHtml = totalHtml + '<span style="color: #27ae60;">+$' + totalIncome.toFixed(2) + '</span>';
+            }
+            if (totalExpenses > 0) {
+                if (totalIncome > 0) totalHtml = totalHtml + ' / ';
+                totalHtml = totalHtml + '<span style="color: #e74c3c;">-$' + totalExpenses.toFixed(2) + '</span>';
+            }
+            modalTotal.innerHTML = totalHtml;
+            
+            // Add click handlers to open edit modal
+            let expenseItems = modalExpenses.querySelectorAll('.expense-item[data-type="expense"]');
+            for (let i = 0; i < expenseItems.length; i++) {
+                expenseItems[i].addEventListener('click', function() {
+                    let index = parseInt(this.getAttribute('data-expense-index'));
+                    closeModal();
+                    openEditModal(index, 'expense');
+                });
+            }
+            
+            let incomeItems = modalExpenses.querySelectorAll('.expense-item[data-type="income"]');
+            for (let i = 0; i < incomeItems.length; i++) {
+                incomeItems[i].addEventListener('click', function() {
+                    let index = parseInt(this.getAttribute('data-income-index'));
+                    closeModal();
+                    openEditModal(index, 'income');
+                });
+            }
+            
+            // Show the modal
+            modalOverlay.classList.add('active');
+        }
+        
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+        }
+        
+        // Close modal when clicking X button
+        modalClose.addEventListener('click', closeModal);
+        
+        // Close modal when clicking outside of it
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === modalOverlay) {
                 closeModal();
-                renderGigs();
+            }
+        });
+
+        // ============================================
+        // TRENDS: Calculate and display statistics
+        // ============================================
+        
+        const statTotalSpent = document.getElementById('stat-total-spent');
+        const statTotalSpentCad = document.getElementById('stat-total-spent-cad');
+        const statAvgTransaction = document.getElementById('stat-avg-transaction');
+        const statTransactionCount = document.getElementById('stat-transaction-count');
+        const categoryBreakdown = document.getElementById('category-breakdown');
+        
+        const statTotalIncome = document.getElementById('stat-total-income');
+        const statTotalIncomeCad = document.getElementById('stat-total-income-cad');
+        const statIncomeAvg = document.getElementById('stat-income-avg');
+        const statIncomeCount = document.getElementById('stat-income-count');
+        const incomeBreakdown = document.getElementById('income-breakdown');
+        
+        const rolloverAmount = document.getElementById('rollover-amount');
+        
+        function renderTrends() {
+            // Get current month and year
+            let now = new Date();
+            let currentMonth = now.getMonth();
+            let currentYear = now.getFullYear();
+            
+            // Filter expenses for current month
+            let monthExpenses = [];
+            for (let i = 0; i < expenses.length; i++) {
+                let expenseDate = new Date(expenses[i].date);
+                if (expenseDate.getMonth() === currentMonth && expenseDate.getFullYear() === currentYear) {
+                    monthExpenses.push(expenses[i]);
+                }
+            }
+            
+            // Filter income for current month
+            let monthIncomes = [];
+            for (let i = 0; i < incomes.length; i++) {
+                let incomeDate = new Date(incomes[i].date);
+                if (incomeDate.getMonth() === currentMonth && incomeDate.getFullYear() === currentYear) {
+                    monthIncomes.push(incomes[i]);
+                }
+            }
+            
+            // Calculate expense stats by currency
+            let totalSpentUSD = 0;
+            let totalSpentCAD = 0;
+            for (let i = 0; i < monthExpenses.length; i++) {
+                let currency = monthExpenses[i].currency || 'USD';
+                if (currency === 'CAD') {
+                    totalSpentCAD += monthExpenses[i].amount;
+                } else {
+                    totalSpentUSD += monthExpenses[i].amount;
+                }
+            }
+            
+            // Calculate income stats by currency
+            let totalIncomeUSD = 0;
+            let totalIncomeCAD = 0;
+            for (let i = 0; i < monthIncomes.length; i++) {
+                let currency = monthIncomes[i].currency || 'USD';
+                if (currency === 'CAD') {
+                    totalIncomeCAD += monthIncomes[i].amount;
+                } else {
+                    totalIncomeUSD += monthIncomes[i].amount;
+                }
+            }
+            
+            // Average per transaction (combined for simplicity)
+            let totalSpent = totalSpentUSD + totalSpentCAD;
+            let totalIncome = totalIncomeUSD + totalIncomeCAD;
+            let avgTransaction = monthExpenses.length > 0 ? totalSpent / monthExpenses.length : 0;
+            let avgIncomeTransaction = monthIncomes.length > 0 ? totalIncome / monthIncomes.length : 0;
+            
+            // Update expense stat displays
+            statTotalSpent.textContent = '$' + totalSpentUSD.toFixed(0);
+            statTotalSpentCad.textContent = '$' + totalSpentCAD.toFixed(0);
+            statAvgTransaction.textContent = '$' + avgTransaction.toFixed(0);
+            statTransactionCount.textContent = monthExpenses.length;
+            
+            // Update income stat displays
+            statTotalIncome.textContent = '$' + totalIncomeUSD.toFixed(0);
+            statTotalIncomeCad.textContent = '$' + totalIncomeCAD.toFixed(0);
+            statIncomeAvg.textContent = '$' + avgIncomeTransaction.toFixed(0);
+            statIncomeCount.textContent = monthIncomes.length;
+            
+            // Calculate category breakdown for expenses
+            let categoryTotals = {};
+            for (let i = 0; i < monthExpenses.length; i++) {
+                let category = monthExpenses[i].category;
+                if (categoryTotals[category]) {
+                    categoryTotals[category] = categoryTotals[category] + monthExpenses[i].amount;
+                } else {
+                    categoryTotals[category] = monthExpenses[i].amount;
+                }
+            }
+            
+            // Convert to array and sort by amount (highest first)
+            let categoryArray = [];
+            for (let category in categoryTotals) {
+                categoryArray.push({
+                    name: category,
+                    amount: categoryTotals[category]
+                });
+            }
+            categoryArray.sort(function(a, b) {
+                return b.amount - a.amount;
+            });
+            
+            // Build category list HTML
+            if (categoryArray.length === 0) {
+                categoryBreakdown.innerHTML = '<p class="no-data-message">No expenses this month yet.</p>';
+            } else {
+                let html = '';
+                for (let i = 0; i < categoryArray.length; i++) {
+                    let cat = categoryArray[i];
+                    html = html + '<div class="category-item">';
+                    html = html + '<strong>' + cat.name + ':</strong> $' + cat.amount.toFixed(2);
+                    html = html + '</div>';
+                }
+                categoryBreakdown.innerHTML = html;
+            }
+            
+            // Calculate source breakdown for income
+            let sourceTotals = {};
+            for (let i = 0; i < monthIncomes.length; i++) {
+                let source = monthIncomes[i].source;
+                if (sourceTotals[source]) {
+                    sourceTotals[source] = sourceTotals[source] + monthIncomes[i].amount;
+                } else {
+                    sourceTotals[source] = monthIncomes[i].amount;
+                }
+            }
+            
+            // Convert to array and sort by amount (highest first)
+            let sourceArray = [];
+            for (let source in sourceTotals) {
+                sourceArray.push({
+                    name: source,
+                    amount: sourceTotals[source]
+                });
+            }
+            sourceArray.sort(function(a, b) {
+                return b.amount - a.amount;
+            });
+            
+            // Build income source list HTML
+            if (sourceArray.length === 0) {
+                incomeBreakdown.innerHTML = '<p class="no-data-message">No income this month yet.</p>';
+            } else {
+                let html = '';
+                for (let i = 0; i < sourceArray.length; i++) {
+                    let src = sourceArray[i];
+                    html = html + '<div class="category-item">';
+                    html = html + '<strong>' + src.name + ':</strong> <span style="color: #27ae60;">$' + src.amount.toFixed(2) + '</span>';
+                    html = html + '</div>';
+                }
+                incomeBreakdown.innerHTML = html;
+            }
+            
+            // Calculate and display rollover (Budget - USD Expenses only)
+            let rollover = monthlyBudget - totalSpentUSD;
+            if (rollover >= 0) {
+                rolloverAmount.textContent = '$' + rollover.toFixed(2);
+                rolloverAmount.style.color = '#27ae60';
+            } else {
+                rolloverAmount.textContent = '-$' + Math.abs(rollover).toFixed(2);
+                rolloverAmount.style.color = '#e74c3c';
+            }
+            
+            // Render monthly history
+            renderMonthlyHistory();
+        }
+        
+        // ============================================
+        // MONTHLY HISTORY: Show trends for all months
+        // ============================================
+        
+        const monthlyHistory = document.getElementById('monthly-history');
+        const monthModalOverlay = document.getElementById('month-modal-overlay');
+        const monthModalClose = document.getElementById('month-modal-close');
+        const monthModalTitle = document.getElementById('month-modal-title');
+        const monthModalContent = document.getElementById('month-modal-content');
+        const historyYearLabel = document.getElementById('history-year-label');
+        const prevYearBtn = document.getElementById('prev-year-btn');
+        const nextYearBtn = document.getElementById('next-year-btn');
+        
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                          'July', 'August', 'September', 'October', 'November', 'December'];
+        
+        const monthShortNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                                 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        let currentHistoryYear = new Date().getFullYear();
+        
+        // Year navigation
+        prevYearBtn.addEventListener('click', function() {
+            currentHistoryYear--;
+            renderMonthlyHistory();
+        });
+        
+        nextYearBtn.addEventListener('click', function() {
+            currentHistoryYear++;
+            renderMonthlyHistory();
+        });
+        
+        function renderMonthlyHistory() {
+            // Update year label
+            historyYearLabel.textContent = currentHistoryYear;
+            
+            // Group expenses by month
+            let monthlyData = {};
+            
+            for (let i = 0; i < expenses.length; i++) {
+                let expenseDate = new Date(expenses[i].date);
+                let monthKey = expenseDate.getFullYear() + '-' + String(expenseDate.getMonth() + 1).padStart(2, '0');
+                
+                if (!monthlyData[monthKey]) {
+                    monthlyData[monthKey] = {
+                        totalExpenses: 0,
+                        totalIncome: 0,
+                        expenseCount: 0,
+                        incomeCount: 0,
+                        year: expenseDate.getFullYear(),
+                        month: expenseDate.getMonth(),
+                        categories: {},
+                        sources: {}
+                    };
+                }
+                
+                monthlyData[monthKey].totalExpenses += expenses[i].amount;
+                monthlyData[monthKey].expenseCount += 1;
+                
+                // Track category totals
+                let cat = expenses[i].category;
+                if (!monthlyData[monthKey].categories[cat]) {
+                    monthlyData[monthKey].categories[cat] = 0;
+                }
+                monthlyData[monthKey].categories[cat] += expenses[i].amount;
+            }
+            
+            // Group income by month
+            for (let i = 0; i < incomes.length; i++) {
+                let incomeDate = new Date(incomes[i].date);
+                let monthKey = incomeDate.getFullYear() + '-' + String(incomeDate.getMonth() + 1).padStart(2, '0');
+                
+                if (!monthlyData[monthKey]) {
+                    monthlyData[monthKey] = {
+                        totalExpenses: 0,
+                        totalIncome: 0,
+                        expenseCount: 0,
+                        incomeCount: 0,
+                        year: incomeDate.getFullYear(),
+                        month: incomeDate.getMonth(),
+                        categories: {},
+                        sources: {}
+                    };
+                }
+                
+                monthlyData[monthKey].totalIncome += incomes[i].amount;
+                monthlyData[monthKey].incomeCount += 1;
+                
+                // Track source totals
+                let src = incomes[i].source;
+                if (!monthlyData[monthKey].sources[src]) {
+                    monthlyData[monthKey].sources[src] = 0;
+                }
+                monthlyData[monthKey].sources[src] += incomes[i].amount;
+            }
+            
+            // Store for modal access
+            window.monthlyData = monthlyData;
+            
+            // Build HTML - grid of all 12 months
+            let html = '';
+            for (let m = 0; m < 12; m++) {
+                let monthKey = currentHistoryYear + '-' + String(m + 1).padStart(2, '0');
+                let hasData = monthlyData[monthKey] ? true : false;
+                
+                html = html + '<div class="month-history-item' + (hasData ? ' has-data' : '') + '"';
+                if (hasData) {
+                    html = html + ' data-month-key="' + monthKey + '"';
+                }
+                html = html + '>';
+                html = html + monthShortNames[m];
+                html = html + '</div>';
+            }
+            monthlyHistory.innerHTML = html;
+            
+            // Add click handlers to months with data
+            let items = monthlyHistory.querySelectorAll('.month-history-item.has-data');
+            for (let i = 0; i < items.length; i++) {
+                items[i].addEventListener('click', function() {
+                    let monthKey = this.getAttribute('data-month-key');
+                    openMonthModal(monthKey);
+                });
             }
         }
-
-        // Save to localStorage
-        function saveData() {
-            localStorage.setItem('gigAdvance_gigs', JSON.stringify(gigs));
+        
+        function openMonthModal(monthKey) {
+            let m = window.monthlyData[monthKey];
+            
+            // Set title
+            monthModalTitle.textContent = monthNames[m.month] + ' ' + m.year;
+            
+            // Calculate stats
+            let avgPerExpense = m.expenseCount > 0 ? m.totalExpenses / m.expenseCount : 0;
+            let avgPerIncome = m.incomeCount > 0 ? m.totalIncome / m.incomeCount : 0;
+            let net = m.totalIncome - m.totalExpenses;
+            
+            // Find top category
+            let topCategory = 'N/A';
+            let topCatAmount = 0;
+            for (let cat in m.categories) {
+                if (m.categories[cat] > topCatAmount) {
+                    topCatAmount = m.categories[cat];
+                    topCategory = cat;
+                }
+            }
+            
+            // Find top source
+            let topSource = 'N/A';
+            let topSrcAmount = 0;
+            for (let src in m.sources) {
+                if (m.sources[src] > topSrcAmount) {
+                    topSrcAmount = m.sources[src];
+                    topSource = src;
+                }
+            }
+            
+            // Build content
+            let html = '';
+            
+            // Income section
+            html = html + '<div style="color: #9a9a9a; font-size: 0.75rem; margin-bottom: 8px;">INCOME</div>';
+            html = html + '<div class="modal-stat-row"><span class="modal-stat-label">Total Income</span><span class="modal-stat-value" style="color: #27ae60;">$' + m.totalIncome.toFixed(2) + '</span></div>';
+            html = html + '<div class="modal-stat-row"><span class="modal-stat-label">Transactions</span><span class="modal-stat-value">' + m.incomeCount + '</span></div>';
+            html = html + '<div class="modal-stat-row"><span class="modal-stat-label">Top Source</span><span class="modal-stat-value">' + topSource + '</span></div>';
+            
+            // Expenses section
+            html = html + '<div style="color: #9a9a9a; font-size: 0.75rem; margin-bottom: 8px; margin-top: 16px;">EXPENSES</div>';
+            html = html + '<div class="modal-stat-row"><span class="modal-stat-label">Total Spent</span><span class="modal-stat-value" style="color: #e74c3c;">$' + m.totalExpenses.toFixed(2) + '</span></div>';
+            html = html + '<div class="modal-stat-row"><span class="modal-stat-label">Transactions</span><span class="modal-stat-value">' + m.expenseCount + '</span></div>';
+            html = html + '<div class="modal-stat-row"><span class="modal-stat-label">Top Category</span><span class="modal-stat-value">' + topCategory + '</span></div>';
+            
+            // Net section
+            html = html + '<div style="color: #9a9a9a; font-size: 0.75rem; margin-bottom: 8px; margin-top: 16px;">SUMMARY</div>';
+            let netColor = net >= 0 ? '#27ae60' : '#e74c3c';
+            let netText = net >= 0 ? '+$' + net.toFixed(2) : '-$' + Math.abs(net).toFixed(2);
+            html = html + '<div class="modal-stat-row"><span class="modal-stat-label">Net</span><span class="modal-stat-value" style="color: ' + netColor + ';">' + netText + '</span></div>';
+            
+            monthModalContent.innerHTML = html;
+            
+            // Show modal
+            monthModalOverlay.classList.add('active');
         }
+        
+        function closeMonthModal() {
+            monthModalOverlay.classList.remove('active');
+        }
+        
+        // Close modal when clicking X button
+        monthModalClose.addEventListener('click', closeMonthModal);
+        
+        // Close modal when clicking outside of it
+        monthModalOverlay.addEventListener('click', function(e) {
+            if (e.target === monthModalOverlay) {
+                closeMonthModal();
+            }
+        });
 
-        // Render
-        function renderGigs() {
-            const container = document.getElementById('gigList');
+        // ============================================
+        // EDIT MODAL: Edit or delete an expense
+        // ============================================
+        
+        const editModalOverlay = document.getElementById('edit-modal-overlay');
+        const editModalClose = document.getElementById('edit-modal-close');
+        const editModalTitle = document.getElementById('edit-modal-title');
+        const editAmount = document.getElementById('edit-amount');
+        const editCurrency = document.getElementById('edit-currency');
+        const editCategory = document.getElementById('edit-category');
+        const editCategoryLabel = document.getElementById('edit-category-label');
+        const editDescription = document.getElementById('edit-description');
+        const editDate = document.getElementById('edit-date');
+        const editDeleteBtn = document.getElementById('edit-delete-btn');
+        const editSaveBtn = document.getElementById('edit-save-btn');
+        
+        let currentEditIndex = null;
+        let currentEditType = null;
+        
+        function openEditModal(index, type) {
+            currentEditIndex = index;
+            currentEditType = type;
             
-            // Filter by current tab
-            const filtered = gigs.filter(g => g.status === currentTab);
-            
-            if (filtered.length === 0) {
-                const emptyMessages = {
-                    pending: 'No pending gigs',
-                    complete: 'No completed gigs'
-                };
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                        </svg>
-                        <h3>${emptyMessages[currentTab]}</h3>
-                        <p>Tap "New Gig" to add one</p>
-                    </div>
+            if (type === 'expense') {
+                let expense = expenses[index];
+                editModalTitle.textContent = 'Edit Expense';
+                editCategoryLabel.textContent = 'Category';
+                editAmount.value = expense.amount;
+                editCurrency.value = expense.currency || 'USD';
+                editCategory.innerHTML = `
+                    <option value="Food">Food</option>
+                    <option value="Transport">Transport</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Bills">Bills</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Health">Health</option>
+                    <option value="Other">Other</option>
                 `;
+                editCategory.value = expense.category;
+                editDescription.value = expense.description;
+                editDate.value = expense.date;
+            } else {
+                let income = incomes[index];
+                editModalTitle.textContent = 'Edit Income';
+                editCategoryLabel.textContent = 'Source';
+                editAmount.value = income.amount;
+                editCurrency.value = income.currency || 'USD';
+                editCategory.innerHTML = `
+                    <option value="Salary">Salary</option>
+                    <option value="Freelance">Freelance</option>
+                    <option value="Investment">Investment</option>
+                    <option value="Gift">Gift</option>
+                    <option value="Refund">Refund</option>
+                    <option value="Other">Other</option>
+                `;
+                editCategory.value = income.source;
+                editDescription.value = income.description;
+                editDate.value = income.date;
+            }
+            
+            // Show the modal
+            editModalOverlay.classList.add('active');
+        }
+        
+        function closeEditModal() {
+            editModalOverlay.classList.remove('active');
+            currentEditIndex = null;
+        }
+        
+        // Close modal when clicking X button
+        editModalClose.addEventListener('click', closeEditModal);
+        
+        // Close modal when clicking outside of it
+        editModalOverlay.addEventListener('click', function(e) {
+            if (e.target === editModalOverlay) {
+                closeEditModal();
+            }
+        });
+        
+        // Save edited expense/income
+        editSaveBtn.addEventListener('click', function() {
+            if (currentEditIndex === null) return;
+            
+            let amount = parseFloat(editAmount.value);
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid amount');
                 return;
             }
-
-            // Sort by date (upcoming first)
-            const sorted = [...filtered].sort((a, b) => {
-                if (!a.date && !b.date) return 0;
-                if (!a.date) return 1;
-                if (!b.date) return -1;
-                return new Date(a.date) - new Date(b.date);
-            });
-
-            container.innerHTML = sorted.map(gig => {
-                const dateStr = gig.date ? new Date(gig.date + 'T00:00:00').toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric',
-                    year: 'numeric'
-                }) : 'No date';
-
-                // Count checklist progress
-                const totalItems = 13;
-                let answered = 0;
-                if (gig.checklist) {
-                    Object.values(gig.checklist).forEach(item => {
-                        if (item.value && item.value !== 'tbd') answered++;
-                    });
+            
+            if (!editDate.value) {
+                alert('Please enter a date');
+                return;
+            }
+            
+            if (currentEditType === 'expense') {
+                // Update the expense
+                expenses[currentEditIndex] = {
+                    amount: amount,
+                    currency: editCurrency.value,
+                    category: editCategory.value,
+                    description: editDescription.value,
+                    date: editDate.value
+                };
+                saveToStorage('expenses', expenses);
+                displayExpenses();
+            } else {
+                // Update the income
+                incomes[currentEditIndex] = {
+                    amount: amount,
+                    currency: editCurrency.value,
+                    source: editCategory.value,
+                    description: editDescription.value,
+                    date: editDate.value
+                };
+                saveToStorage('incomes', incomes);
+                displayIncomes();
+            }
+            
+            // Update displays
+            updateDisplay();
+            renderCalendar();
+            
+            // Close modal
+            closeEditModal();
+        });
+        
+        // Delete expense/income
+        editDeleteBtn.addEventListener('click', function() {
+            if (currentEditIndex === null) return;
+            
+            let itemType = currentEditType === 'expense' ? 'expense' : 'income';
+            if (confirm('Are you sure you want to delete this ' + itemType + '?')) {
+                if (currentEditType === 'expense') {
+                    expenses.splice(currentEditIndex, 1);
+                    saveToStorage('expenses', expenses);
+                    displayExpenses();
+                } else {
+                    incomes.splice(currentEditIndex, 1);
+                    saveToStorage('incomes', incomes);
+                    displayIncomes();
                 }
+                
+                // Update displays
+                updateDisplay();
+                renderCalendar();
+                
+                // Close modal
+                closeEditModal();
+            }
+        });
 
-                return `
-                    <div class="gig-card" onclick="openModal('${gig.id}')">
-                        <div class="gig-card-header">
-                            <div class="gig-venue">${escapeHtml(gig.venue)}</div>
-                            <span class="gig-status status-${gig.status}">${gig.status}</span>
-                        </div>
-                        <div class="gig-meta">
-                            ${dateStr}${gig.city ? ' · ' + escapeHtml(gig.city) : ''}
-                        </div>
-                        <div class="gig-progress">
-                            <span class="progress-item">${answered}/${totalItems} items answered</span>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+        // ============================================
+        // DEBT TRACKER
+        // ============================================
+        
+        const cardSelector = document.getElementById('card-selector');
+        const addCardBtn = document.getElementById('add-card-btn');
+        const editCardBtn = document.getElementById('edit-card-btn');
+        const deleteCardBtn = document.getElementById('delete-card-btn');
+        const debtCardTitle = document.getElementById('debt-card-title');
+        const debtBalanceDisplay = document.getElementById('debt-balance');
+        const debtTotalPaid = document.getElementById('debt-total-paid');
+        const debtPaidThisMonth = document.getElementById('debt-paid-this-month');
+        const debtBalanceInput = document.getElementById('debt-balance-input');
+        const updateBalanceBtn = document.getElementById('update-balance-btn');
+        const debtPaymentInput = document.getElementById('debt-payment-input');
+        const debtPaymentDate = document.getElementById('debt-payment-date');
+        const addPaymentBtn = document.getElementById('add-payment-btn');
+        const paymentHistory = document.getElementById('payment-history');
+        
+        function populateCardSelector() {
+            cardSelector.innerHTML = '';
+            
+            if (creditCards.length === 0) {
+                let option = document.createElement('option');
+                option.value = '';
+                option.textContent = 'No cards yet';
+                cardSelector.appendChild(option);
+                return;
+            }
+            
+            for (let i = 0; i < creditCards.length; i++) {
+                let option = document.createElement('option');
+                option.value = i;
+                option.textContent = creditCards[i].name;
+                if (i === currentCardIndex) {
+                    option.selected = true;
+                }
+                cardSelector.appendChild(option);
+            }
         }
-
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+        
+        function getCurrentCard() {
+            if (creditCards.length === 0 || currentCardIndex >= creditCards.length) {
+                return null;
+            }
+            return creditCards[currentCardIndex];
         }
+        
+        function renderDebt() {
+            populateCardSelector();
+            
+            let card = getCurrentCard();
+            
+            if (!card) {
+                debtCardTitle.textContent = 'No Card Selected';
+                debtBalanceDisplay.textContent = '$0.00 CAD';
+                debtTotalPaid.textContent = '$0.00';
+                debtPaidThisMonth.textContent = '$0.00';
+                paymentHistory.innerHTML = '<p>No cards yet. Add a card to get started.</p>';
+                return;
+            }
+            
+            // Display card name and balance
+            debtCardTitle.textContent = card.name;
+            debtBalanceDisplay.textContent = '$' + card.balance.toFixed(2) + ' CAD';
+            
+            // Calculate total paid
+            let totalPaid = 0;
+            let payments = card.payments || [];
+            for (let i = 0; i < payments.length; i++) {
+                totalPaid += payments[i].amount;
+            }
+            debtTotalPaid.textContent = '$' + totalPaid.toFixed(2);
+            
+            // Calculate paid this month
+            let now = new Date();
+            let currentMonth = now.getMonth();
+            let currentYear = now.getFullYear();
+            let paidThisMonth = 0;
+            
+            for (let i = 0; i < payments.length; i++) {
+                let paymentDate = new Date(payments[i].date);
+                if (paymentDate.getMonth() === currentMonth && paymentDate.getFullYear() === currentYear) {
+                    paidThisMonth += payments[i].amount;
+                }
+            }
+            debtPaidThisMonth.textContent = '$' + paidThisMonth.toFixed(2);
+            
+            // Display payment history
+            if (payments.length === 0) {
+                paymentHistory.innerHTML = '<p>No payments yet.</p>';
+            } else {
+                let html = '';
+                let recentPayments = payments.slice(-5).reverse();
+                for (let i = 0; i < recentPayments.length; i++) {
+                    let payment = recentPayments[i];
+                    html += '<div style="padding: 12px 0; border-bottom: 1px solid #f0f0f0;">';
+                    html += '<div><strong>$' + payment.amount.toFixed(2) + ' CAD</strong></div>';
+                    html += '<div style="color: #9a9a9a; font-size: 0.85rem; margin-top: 4px;">' + payment.date + '</div>';
+                    html += '</div>';
+                }
+                paymentHistory.innerHTML = html;
+            }
+        }
+        
+        cardSelector.addEventListener('change', function() {
+            currentCardIndex = parseInt(cardSelector.value) || 0;
+            saveToStorage('currentCardIndex', currentCardIndex);
+            renderDebt();
+        });
+        
+        // Card modal elements
+        const cardModalOverlay = document.getElementById('card-modal-overlay');
+        const cardModalClose = document.getElementById('card-modal-close');
+        const cardModalTitle = document.getElementById('card-modal-title');
+        const cardNameInput = document.getElementById('card-name-input');
+        const cardModalSaveBtn = document.getElementById('card-modal-save-btn');
+        
+        let cardModalMode = 'add'; // 'add' or 'edit'
+        
+        function openCardModal(mode) {
+            cardModalMode = mode;
+            if (mode === 'add') {
+                cardModalTitle.textContent = 'Add Card';
+                cardNameInput.value = '';
+            } else {
+                cardModalTitle.textContent = 'Edit Card Name';
+                let card = getCurrentCard();
+                cardNameInput.value = card ? card.name : '';
+            }
+            cardModalOverlay.classList.add('active');
+        }
+        
+        function closeCardModal() {
+            cardModalOverlay.classList.remove('active');
+        }
+        
+        cardModalClose.addEventListener('click', closeCardModal);
+        
+        cardModalOverlay.addEventListener('click', function(e) {
+            if (e.target === cardModalOverlay) {
+                closeCardModal();
+            }
+        });
+        
+        cardModalSaveBtn.addEventListener('click', function() {
+            let cardName = cardNameInput.value.trim();
+            if (!cardName) {
+                alert('Please enter a card name');
+                return;
+            }
+            
+            if (cardModalMode === 'add') {
+                let newCard = {
+                    name: cardName,
+                    balance: 0,
+                    payments: []
+                };
+                creditCards.push(newCard);
+                currentCardIndex = creditCards.length - 1;
+            } else {
+                creditCards[currentCardIndex].name = cardName;
+            }
+            
+            saveToStorage('creditCards', creditCards);
+            saveToStorage('currentCardIndex', currentCardIndex);
+            closeCardModal();
+            renderDebt();
+        });
+        
+        addCardBtn.addEventListener('click', function() {
+            openCardModal('add');
+        });
+        
+        editCardBtn.addEventListener('click', function() {
+            let card = getCurrentCard();
+            if (!card) {
+                alert('No card selected');
+                return;
+            }
+            openCardModal('edit');
+        });
+        
+        deleteCardBtn.addEventListener('click', function() {
+            let card = getCurrentCard();
+            if (!card) {
+                alert('No card selected');
+                return;
+            }
+            
+            if (confirm('Are you sure you want to delete "' + card.name + '"? This will remove all payment history for this card.')) {
+                creditCards.splice(currentCardIndex, 1);
+                if (currentCardIndex >= creditCards.length) {
+                    currentCardIndex = Math.max(0, creditCards.length - 1);
+                }
+                saveToStorage('creditCards', creditCards);
+                saveToStorage('currentCardIndex', currentCardIndex);
+                renderDebt();
+            }
+        });
+        
+        updateBalanceBtn.addEventListener('click', function() {
+            let card = getCurrentCard();
+            if (!card) {
+                alert('Please add a card first');
+                return;
+            }
+            
+            let newBalance = parseFloat(debtBalanceInput.value);
+            if (isNaN(newBalance) || newBalance < 0) {
+                alert('Please enter a valid balance');
+                return;
+            }
+            
+            creditCards[currentCardIndex].balance = newBalance;
+            saveToStorage('creditCards', creditCards);
+            debtBalanceInput.value = '';
+            renderDebt();
+        });
+        
+        addPaymentBtn.addEventListener('click', function() {
+            let card = getCurrentCard();
+            if (!card) {
+                alert('Please add a card first');
+                return;
+            }
+            
+            let amount = parseFloat(debtPaymentInput.value);
+            let date = debtPaymentDate.value;
+            
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid payment amount');
+                return;
+            }
+            
+            if (!date) {
+                alert('Please enter a date');
+                return;
+            }
+            
+            let payment = {
+                amount: amount,
+                date: date
+            };
+            
+            if (!creditCards[currentCardIndex].payments) {
+                creditCards[currentCardIndex].payments = [];
+            }
+            creditCards[currentCardIndex].payments.push(payment);
+            
+            // Also reduce balance
+            creditCards[currentCardIndex].balance = Math.max(0, creditCards[currentCardIndex].balance - amount);
+            
+            saveToStorage('creditCards', creditCards);
+            debtPaymentInput.value = '';
+            debtPaymentDate.value = '';
+            renderDebt();
+        });
 
-        // Init
-        initTheme();
-        renderGigs();
+        // ============================================
+        // SUBSCRIPTIONS
+        // ============================================
+        
+        const subscriptionList = document.getElementById('subscription-list');
+        const addSubscriptionBtn = document.getElementById('add-subscription-btn');
+        const subscriptionModalOverlay = document.getElementById('subscription-modal-overlay');
+        const subscriptionModalClose = document.getElementById('subscription-modal-close');
+        const subscriptionModalTitle = document.getElementById('subscription-modal-title');
+        const subscriptionName = document.getElementById('subscription-name');
+        const subscriptionAmount = document.getElementById('subscription-amount');
+        const subscriptionCurrency = document.getElementById('subscription-currency');
+        const subscriptionCategory = document.getElementById('subscription-category');
+        const subscriptionDay = document.getElementById('subscription-day');
+        const subscriptionSaveBtn = document.getElementById('subscription-save-btn');
+        const subscriptionButtons = document.getElementById('subscription-buttons');
+        const subscriptionEditButtons = document.getElementById('subscription-edit-buttons');
+        const subscriptionDeleteBtn = document.getElementById('subscription-delete-btn');
+        const subscriptionUpdateBtn = document.getElementById('subscription-update-btn');
+        
+        let currentEditSubscriptionIndex = null;
+        
+        function displaySubscriptions() {
+            if (subscriptions.length === 0) {
+                subscriptionList.innerHTML = '<p>No subscriptions yet.</p>';
+                return;
+            }
+            
+            let html = '';
+            for (let i = 0; i < subscriptions.length; i++) {
+                let sub = subscriptions[i];
+                html += '<div class="expense-item" data-subscription-index="' + i + '" style="cursor: pointer;">';
+                html += '<div><strong>' + sub.name + ':</strong> $' + sub.amount.toFixed(2) + ' ' + sub.currency + '</div>';
+                html += '<div style="color: #9a9a9a; font-size: 0.85rem; margin-top: 4px;">Bills on day ' + sub.day + ' · ' + sub.category + '</div>';
+                html += '</div>';
+            }
+            subscriptionList.innerHTML = html;
+            
+            // Add click handlers to edit
+            let items = subscriptionList.querySelectorAll('.expense-item');
+            for (let i = 0; i < items.length; i++) {
+                items[i].addEventListener('click', function() {
+                    let index = parseInt(this.getAttribute('data-subscription-index'));
+                    openSubscriptionModal(index);
+                });
+            }
+        }
+        
+        function openSubscriptionModal(index) {
+            if (index !== null && index !== undefined) {
+                // Edit mode
+                currentEditSubscriptionIndex = index;
+                let sub = subscriptions[index];
+                subscriptionModalTitle.textContent = 'Edit Subscription';
+                subscriptionName.value = sub.name;
+                subscriptionAmount.value = sub.amount;
+                subscriptionCurrency.value = sub.currency;
+                subscriptionCategory.value = sub.category;
+                subscriptionDay.value = sub.day;
+                subscriptionButtons.style.display = 'none';
+                subscriptionEditButtons.style.display = 'flex';
+            } else {
+                // Add mode
+                currentEditSubscriptionIndex = null;
+                subscriptionModalTitle.textContent = 'Add Subscription';
+                subscriptionName.value = '';
+                subscriptionAmount.value = '';
+                subscriptionCurrency.value = 'USD';
+                subscriptionCategory.value = 'Entertainment';
+                subscriptionDay.value = '';
+                subscriptionButtons.style.display = 'flex';
+                subscriptionEditButtons.style.display = 'none';
+            }
+            subscriptionModalOverlay.classList.add('active');
+        }
+        
+        function closeSubscriptionModal() {
+            subscriptionModalOverlay.classList.remove('active');
+            currentEditSubscriptionIndex = null;
+        }
+        
+        addSubscriptionBtn.addEventListener('click', function() {
+            openSubscriptionModal(null);
+        });
+        
+        subscriptionModalClose.addEventListener('click', closeSubscriptionModal);
+        
+        subscriptionModalOverlay.addEventListener('click', function(e) {
+            if (e.target === subscriptionModalOverlay) {
+                closeSubscriptionModal();
+            }
+        });
+        
+        subscriptionSaveBtn.addEventListener('click', function() {
+            let name = subscriptionName.value.trim();
+            let amount = parseFloat(subscriptionAmount.value);
+            let currency = subscriptionCurrency.value;
+            let category = subscriptionCategory.value;
+            let day = parseInt(subscriptionDay.value);
+            
+            if (!name) {
+                alert('Please enter a subscription name');
+                return;
+            }
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+            if (!day || day < 1 || day > 31) {
+                alert('Please enter a valid billing day (1-31)');
+                return;
+            }
+            
+            let subscription = {
+                name: name,
+                amount: amount,
+                currency: currency,
+                category: category,
+                day: day
+            };
+            
+            subscriptions.push(subscription);
+            saveToStorage('subscriptions', subscriptions);
+            displaySubscriptions();
+            closeSubscriptionModal();
+        });
+        
+        subscriptionUpdateBtn.addEventListener('click', function() {
+            if (currentEditSubscriptionIndex === null) return;
+            
+            let name = subscriptionName.value.trim();
+            let amount = parseFloat(subscriptionAmount.value);
+            let currency = subscriptionCurrency.value;
+            let category = subscriptionCategory.value;
+            let day = parseInt(subscriptionDay.value);
+            
+            if (!name) {
+                alert('Please enter a subscription name');
+                return;
+            }
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+            if (!day || day < 1 || day > 31) {
+                alert('Please enter a valid billing day (1-31)');
+                return;
+            }
+            
+            subscriptions[currentEditSubscriptionIndex] = {
+                name: name,
+                amount: amount,
+                currency: currency,
+                category: category,
+                day: day
+            };
+            
+            saveToStorage('subscriptions', subscriptions);
+            displaySubscriptions();
+            closeSubscriptionModal();
+        });
+        
+        subscriptionDeleteBtn.addEventListener('click', function() {
+            if (currentEditSubscriptionIndex === null) return;
+            
+            if (confirm('Are you sure you want to delete this subscription?')) {
+                subscriptions.splice(currentEditSubscriptionIndex, 1);
+                saveToStorage('subscriptions', subscriptions);
+                displaySubscriptions();
+                closeSubscriptionModal();
+            }
+        });
+        
+        // Check and auto-add subscription expenses
+        function checkSubscriptions() {
+            let now = new Date();
+            let currentDay = now.getDate();
+            let currentMonth = now.getMonth();
+            let currentYear = now.getFullYear();
+            let dateStr = currentYear + '-' + String(currentMonth + 1).padStart(2, '0') + '-' + String(currentDay).padStart(2, '0');
+            
+            for (let i = 0; i < subscriptions.length; i++) {
+                let sub = subscriptions[i];
+                
+                // Check if billing day has passed this month
+                if (currentDay >= sub.day) {
+                    // Check if we already added this subscription this month
+                    let alreadyAdded = false;
+                    let subDateStr = currentYear + '-' + String(currentMonth + 1).padStart(2, '0') + '-' + String(sub.day).padStart(2, '0');
+                    
+                    for (let j = 0; j < expenses.length; j++) {
+                        let exp = expenses[j];
+                        if (exp.description === 'Subscription: ' + sub.name && 
+                            exp.date === subDateStr) {
+                            alreadyAdded = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!alreadyAdded) {
+                        // Auto-add the subscription as an expense
+                        let expense = {
+                            amount: sub.amount,
+                            currency: sub.currency,
+                            category: sub.category,
+                            description: 'Subscription: ' + sub.name,
+                            date: subDateStr
+                        };
+                        expenses.push(expense);
+                        saveToStorage('expenses', expenses);
+                    }
+                }
+            }
+        }
+        
+        // Run subscription check on load
+        checkSubscriptions();
+        displaySubscriptions();
 
-        // Service Worker
+        // ============================================
+        // REGISTER SERVICE WORKER FOR PWA
+        // ============================================
+        
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
+            navigator.serviceWorker.register('sw.js')
+                .then(function(registration) {
+                    console.log('Service Worker registered');
+                })
+                .catch(function(error) {
+                    console.log('Service Worker registration failed:', error);
+                });
         }
     </script>
+
 </body>
 </html>
