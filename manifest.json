@@ -2,7 +2,7 @@
     "name": "Gig Advance",
     "short_name": "Gig Advance",
     "description": "Track tech advancing details for gigs",
-    "start_url": "/",
+    "start_url": "./",
     "display": "standalone",
     "background_color": "#f8f9fa",
     "theme_color": "#2563eb",
